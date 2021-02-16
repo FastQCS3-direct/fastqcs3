@@ -8,9 +8,13 @@ The purpose of this software is to give users a tool to quickly run some quality
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 Editing in new branch 
 
+=======
+Cassandra was here
+>>>>>>> 01fc5c6011293ac8cb9ad5031a35d768e4798d68
 =======
 Cassandra was here
 >>>>>>> 01fc5c6011293ac8cb9ad5031a35d768e4798d68
