@@ -7,3 +7,5 @@
 The purpose of this software is to give users a tool to quickly run some quality checking immediately after sequencing results become available. The software will be designed to be a python installable package that is run from the command line. Designed modularly, the user will have the chance to specify what kind of FastQCS3 they want to perform.
 
 
+Editing in new branch 
+
