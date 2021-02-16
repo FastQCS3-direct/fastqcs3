@@ -9,7 +9,17 @@ The purpose of this software is to give users a tool to quickly run some quality
 Ben was here
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+Editing in new branch 
+
+=======
 Cassandra was here
+>>>>>>> 01fc5c6011293ac8cb9ad5031a35d768e4798d68
+=======
+Cassandra was here
+>>>>>>> 01fc5c6011293ac8cb9ad5031a35d768e4798d68
 =======
 Adding some things to this document????
 >>>>>>> 9ff088199f918cc8e69af26f2c83764bcf0aa130
