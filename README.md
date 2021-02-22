@@ -6,13 +6,11 @@
 ## Overview/Purpose
 The purpose of this software is to give users a tool to quickly run some quality checking immediately after sequencing results become available. The software will be designed to be a python installable package that is run from the command line. Designed modularly, the user will have the chance to specify what kind of FastQCS3 they want to perform.
 
-Ben was here
+## Installing Dependencies
+Info about QIIME2 Installation Process
 
-Evan was also here...and he's fixing the weird lines in the file
+### If you have a Mac OS...
+Directions here
 
-Editing in new branch 
-
-Cassandra was here
-Cassandra was here
-
-Adding some things to this document????
+### If you have a Windows OS...
+Directions here
