@@ -36,7 +36,7 @@ If `conda install wget` doesn't work, you can also try using `pip install wget`,
 ### If you have a Windows OS...
 the process to install wget will be a more complicated. You'll have to download wget and move the correct exe files into your correct system directories as shown [here](https://builtvisible.com/download-your-website-with-wget/).
 
-This can be complicated if you don't already have administrator privileges set up in these files on your machine; we recommend using the Mac OS or Windows Subsystem for Linux. 
+This can be complicated if you don't already have administrator privileges set up in these files on your machine; we recommend using the Mac OS or Windows Subsystem for Linux. Instructions on installing Windows subsystem for Linux can be found [here] (https://docs.microsoft.com/en-us/windows/wsl/install-win10). 
 
 ## To activate your environment,
 
