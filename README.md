@@ -28,10 +28,12 @@ wget https://data.qiime2.org/distro/core/qiime2-2020.11-py36-linux-conda.yml
 conda env create -n qiime2-2020.11 --file qiime2-2020.11-py36-linux-conda.yml
 rm qiime2-2020.11-py36-linux-conda.yml
 
-### If you have a Windows OS,
+### If you have a Windows OS...
 the process to install wget will be a little more complicated--you'll have to download wget and move the correct exe files into your correct system directories. This can be complicated if you don't already have administrator privileges--we recommend using the Mac OS or Windows Subsystem for Linux.
 
 ## To activate your environment,
-conda activate qiime2-2020.11
-you can deactivate at any time with conda deactivate.
+
+"conda activate qiime2-2020.11"
+
+You can deactivate at any time with conda deactivate.
 
