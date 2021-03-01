@@ -1,7 +1,10 @@
 import pandas as pd
 
+def reduce_taxonomy_df(taxonomy_table):
+    taxonomy_red = taxonomy_table.drop(['Taxon', 'Confidence'], axis=1)
+    return taxonomy_red
 
-def make_taxon_list(taxonomy_table):
+def make_taxon_list(taxonomy_red):
     """creates list of lists of each unique kingdom, phylum, class (etc) seen in the samples"""
     taxon_list = [[] for x in range(7)]
     for seq, row in taxonomy_red.iterrows():
@@ -27,7 +30,7 @@ def make_tax_dfs(taxon_list):
     # columns are different categories within each taxonomy level found in the data, indexes are the samples
     return kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df
 
-def fill_tax_dfs(kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df, feature_table, taxonony_table):
+def fill_tax_dfs(kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df, feature_table, taxonomy_red):
     """fills dataframes for each taxonomy level for creating stacked bar graph"""
     for sample, row in table_rare.iterrows():
         # iterate over feature table rows 
@@ -45,7 +48,7 @@ def fill_tax_dfs(kingdom_df, phylum_df, class_df, order_df, family_df, genus_df,
     return kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df
 
 def prepare_data_stacked_barplots(feature_table, taxonomy_table):
-    taxonomy_red = taxonomy_table.drop(['Taxon', 'Confidence'], axis=1)
+    taxonomy_red = reduce_taxonomy_df(taxonomy_table)
     taxon_list = make_taxon_list(taxonomy_red)
     kingdom_df_0, phylum_df_0, class_df_0, order_df_0, family_df_0, genus_df_0, species_df_0 = make_tax_dfs(taxon_list)
     kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df = fill_tax_dfs(kingdom_df_0, phylum_df_0, class_df_0, order_df_0, 
