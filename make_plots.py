@@ -58,7 +58,8 @@ def plot_fastq_qualities(filename, ax=None, limit=10000):
     ax.set_title('per base sequence quality')    
     return
 
-
+# run this function with:
+# plot_fastq_qualities('file_directory/file.fastq.gz',limit=100000)
 
 def plotly_stacked_barplot(df, plot_title):
     """Given a dataframe and a plot title, returns a plotly stacked barplot figure of the taxonomy data"""
