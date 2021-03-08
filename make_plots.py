@@ -1,68 +1,117 @@
 import pandas as pd
 import plotly.graph_objects as go
+import numpy as np
+import scipy.stats as st
 
 import os
-import math
-import pylab as plt
-import matplotlib.patches as patches
 
-# Bio needs to be installed by the user, can be done with conda install biopython
-import Bio
+# Bio needs to be installed by the user,
+# can be done with conda install biopython
 from Bio import SeqIO
 
-# gzip needs to also be installed by the user, can be done with conda install gzip
+# gzip needs to also be installed by the user,
+# can be done with conda install gzip
 import gzip
 
-import matplotlib
-%matplotlib inline
-matplotlib.rcParams.update({'font.size': 18})
 
-
-# function for plotting quality scores by position of each read within a sample ie. 1_S1_L001_R1_001.fastq.gz
-
-def plot_fastq_qualities(filename, ax=None, limit=10000):
-    """This is the function for creating the plot, sampling 10000 reads from the file and plotting only the subset
-    This is convenient because often times, the fastq files have a ton of reads, but we don't need all of them
-    to get a general idea of how good the plot actually is
-    """
-    # creating a parser to read the gzipped file
+def get_scores(filename, depth):
+    """Inner most function for quality score plotting, makes a record
+    of the quality scores in a given fastq file and creates a
+    dataframe of the resulting scores by position for n = depth
+    reads"""
     fastq_parser = SeqIO.parse(gzip.open(filename, "rt"), "fastq")
-    res=[]
-    c=0
+    result = []
+    count = 0
     for record in fastq_parser:
-        score=record.letter_annotations["phred_quality"]
-        res.append(score)
-        c+=1
-        if c>limit:
+        score = record.letter_annotations["phred_quality"]
+        count += 1
+        result.append(score)
+        if count > depth:
             break
-    df = pd.DataFrame(res)
-    l = len(df.T)+1
+    sample_scores = pd.DataFrame(result)
+    return sample_scores
 
-    if ax==None:
-        f,ax=plt.subplots(figsize=(12,5))
-    rect = patches.Rectangle((0,0),l,20,linewidth=0,facecolor='r',alpha=.4)
-    ax.add_patch(rect)
-    rect = patches.Rectangle((0,20),l,8,linewidth=0,facecolor='yellow',alpha=.4)
-    ax.add_patch(rect)
-    rect = patches.Rectangle((0,28),l,12,linewidth=0,facecolor='g',alpha=.4)
-    ax.add_patch(rect)
-    df.mean().plot(ax=ax,c='black')
-    boxprops = dict(linestyle='-', linewidth=1, color='black')
-    df.plot(kind='box', ax=ax, grid=False, showfliers=False,
-            color=dict(boxes='black',whiskers='black')  )
-    ax.set_xticks(np.arange(0, l, 5))
-    ax.set_xticklabels(np.arange(0, l, 5), fontsize=10)
-    ax.set_xlabel('position(bp)')
-    ax.set_xlim((0,l))
-    ax.set_ylim((0,40))
-    ax.set_title('per base sequence quality')    
-    return
 
-# run this function with:
-# plot_fastq_qualities('file_directory/file.fastq.gz',limit=100000)
+def sum_scores(directory, depth):
+    """Middle layer function that iterated through a directory
+    given as a parameter. Calls the get_scores function on
+    every file within the directory, appending the score dataframe
+    to the existing dataframe of scores"""
+    sum_df = pd.DataFrame()
+    for file in os.listdir(directory):
+        if file.endswith("001.fastq.gz"):
+            sample_scores = get_scores(str(directory+file), depth)
+            sum_df = sum_df.append(sample_scores, ignore_index=True)
+    read_pos = sum_df.columns.to_list()
+    return read_pos, sum_df
+
+
+def plot_qualities(directory, depth):
+    """This function takes a directory and a sampling depth as parameters
+    and calls the sum_scores function to create dataframe with a sample
+    of each fastq file quality scores, then generates a plotly object
+    showing the mean quality score by position with error bars representing
+    the 95% confidence intervals"""
+    read_pos, sum_df = sum_scores(directory, depth)
+    means = sum_df.mean()
+    confidence = 0.95
+    # calculating 95% CI for phred scores for plotting
+    ci95_lo = []
+    ci95_hi = []
+    for column in sum_df:
+        base_scores = sum_df[column]
+        # t statistic 95% CI
+        interval = st.t.interval(confidence, len(base_scores.values)-1,
+                                 loc=np.mean(base_scores.values),
+                                 scale=st.sem(base_scores.values))
+        # appending the lower and upper CI intervals
+        ci95_lo.append(interval[0])
+        ci95_hi.append(interval[1])
+    # creating dict object for error bar plotting
+    error_dict = dict(
+        type='data',
+        symmetric=False,
+        color='black',
+        thickness=1,
+        array=(ci95_hi-means).abs(),
+        arrayminus=(ci95_lo-means).abs())
+    # create figure object
+    fig = go.Figure()
+    # adding low quality score patch
+    fig.add_trace(go.Scatter(x=[0, 0, len(read_pos), len(read_pos)],
+                             y=[0, 20, 20, 0], fill='toself',
+                             showlegend=False,
+                             fillcolor='rgba(244, 0, 0,0.3)',
+                             line_width=0, mode='none',
+                             name='error highly likely'))
+    # adding mid-quality score patch
+    fig.add_trace(go.Scatter(x=[0, 0, len(read_pos), len(read_pos)],
+                             y=[20, 28, 28, 20], fill='toself',
+                             showlegend=False,
+                             fillcolor='rgba(244, 122, 0,0.2)',
+                             line_width=0, mode='none',
+                             name='likely to contain an error'))
+    # adding high quality score patch
+    fig.add_trace(go.Scatter(x=[0, 0, len(read_pos), len(read_pos)],
+                             y=[28, 40, 40, 28], fill='toself',
+                             showlegend=False,
+                             fillcolor='rgba(0, 244, 0,0.2)',
+                             line_width=0, mode='none',
+                             name='likely no error'))
+    # plotting mean scores with error bars
+    fig.add_trace(go.Scatter(x=read_pos, y=means,
+                             mode='lines', showlegend=False,
+                             error_y=error_dict, name='mean phred'))
+    fig.update_layout(yaxis_range=[0, 40], xaxis_range=[0, len(read_pos)])
+    fig.update_layout(title_text='Mean Phred Quality Scores by Position; ' + f'Sampling Depth = {depth}')
+    fig.update_xaxes(title_text='Position (bp)')
+    fig.update_yaxes(title_text='phred quality score')
+    return fig
+
 
 def plotly_stacked_barplot(df, plot_title):
-    """Given a dataframe and a plot title, returns a plotly stacked barplot figure of the taxonomy data"""
+    """Given a dataframe and a plot title, returns a plotly
+    stacked barplot figure of the taxonomy data"""
     fig = go.Figure()
 
     for item, col in df.iteritems():
