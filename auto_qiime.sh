@@ -1,11 +1,10 @@
-read -p 'Directory of .fastq data:' inputpath
-read -p 'Desired trim length:' trimlength
+
 mkdir 'outputs'
 mkdir 'data'
 
 qiime tools import \
   --type EMPSingleEndSequences \
-  --input-path $inputpath \
+  --input-path $1 \
   --output-path outputs/emp-single-end-sequences.qza
 
 qiime demux emp-single \
@@ -26,7 +25,7 @@ qiime quality-filter q-score \
 
 qiime deblur denoise-16S \
   --i-demultiplexed-seqs outputs/demux-filtered.qza \
-  --p-trim-length $trimlength \
+  --p-trim-length $2 \
   --o-representative-sequences outputs/rep-seqs-deblur.qza \
   --o-table outputs/table-deblur.qza \
   --p-sample-stats \
@@ -52,4 +51,8 @@ qiime metadata tabulate \
 
 unzip outputs/taxonomy.qza -d newpath
 cp newpath/*/data/taxonomy.tsv data/taxonomy.tsv
+rm -r newpath
+
+unzip outputs/table.qza -d newpath
+cp newpath/*/data/feature-table.biom data/feature-table.biom
 rm -r newpath
