@@ -14,7 +14,7 @@ from Bio import SeqIO
 import gzip
 
 
-def get_score(filename, depth):
+def get_scores(filename, depth):
     """Inner most function for quality score plotting, makes a record
     of the quality scores in a given fastq file and creates a
     dataframe of the resulting scores by position for n = depth
@@ -53,7 +53,7 @@ def sum_scores(directory, depth):
     to the existing dataframe of scores"""
     sum_df = pd.DataFrame()
     for file in os.listdir(directory):
-        sample_scores = get_score(str(directory+file), depth)
+        sample_scores = get_scores(str(directory+file), depth)
         sum_df = sum_df.append(sample_scores, ignore_index=True)
     read_pos = sum_df.columns.to_list()
     return read_pos, sum_df
