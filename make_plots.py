@@ -19,17 +19,31 @@ def get_scores(filename, depth):
     of the quality scores in a given fastq file and creates a
     dataframe of the resulting scores by position for n = depth
     reads"""
-    fastq_parser = SeqIO.parse(gzip.open(filename, "rt"), "fastq")
-    result = []
-    count = 0
-    for record in fastq_parser:
-        score = record.letter_annotations["phred_quality"]
-        count += 1
-        result.append(score)
-        if count > depth:
-            break
-    sample_scores = pd.DataFrame(result)
-    return sample_scores
+    if filename.endswith('.gz'):
+        fastq_parser = SeqIO.parse(gzip.open(filename, "rt"),
+                                   "fastq")
+        result = []
+        count = 0
+        for record in fastq_parser:
+            score = record.letter_annotations["phred_quality"]
+            count += 1
+            result.append(score)
+            if count > depth:
+                break
+        sample_scores = pd.DataFrame(result)
+        return sample_scores
+    elif filename.endswith('.fastq'):
+        fastq_parser = SeqIO.parse(filename, "fastq")
+        result = []
+        count = 0
+        for record in fastq_parser:
+            score = record.letter_annotations["phred_quality"]
+            count += 1
+            result.append(score)
+            if count > depth:
+                break
+        sample_scores = pd.DataFrame(result)
+        return sample_scores
 
 
 def sum_scores(directory, depth):
@@ -39,9 +53,8 @@ def sum_scores(directory, depth):
     to the existing dataframe of scores"""
     sum_df = pd.DataFrame()
     for file in os.listdir(directory):
-        if file.endswith("001.fastq.gz"):
-            sample_scores = get_scores(str(directory+file), depth)
-            sum_df = sum_df.append(sample_scores, ignore_index=True)
+        sample_scores = get_scores(str(directory+file), depth)
+        sum_df = sum_df.append(sample_scores, ignore_index=True)
     read_pos = sum_df.columns.to_list()
     return read_pos, sum_df
 
@@ -54,27 +67,32 @@ def plot_qualities(directory, depth):
     the 95% confidence intervals"""
     read_pos, sum_df = sum_scores(directory, depth)
     means = sum_df.mean()
-    confidence = 0.95
+    confidence = 0.90
     # calculating 95% CI for phred scores for plotting
     ci95_lo = []
-    ci95_hi = []
     for column in sum_df:
         base_scores = sum_df[column]
         # t statistic 95% CI
         interval = st.t.interval(confidence, len(base_scores.values)-1,
                                  loc=np.mean(base_scores.values),
-                                 scale=st.sem(base_scores.values))
-        # appending the lower and upper CI intervals
+                                 scale=st.tstd(base_scores.values))
+        # appending the lower CI intervals
         ci95_lo.append(interval[0])
-        ci95_hi.append(interval[1])
-    # creating dict object for error bar plotting
+    CI_below = []
+    for num1, num2 in zip(ci95_lo, means):
+        CI_below.append(np.abs(num1 - num2))
+    CI_below = [x * 1.5 for x in CI_below]
+    max_quality = []
+    for column in sum_df:
+        scores = sum_df[column]
+        max_quality.append(np.max(scores.values))
     error_dict = dict(
         type='data',
         symmetric=False,
         color='black',
         thickness=1,
-        array=(ci95_hi-means).abs(),
-        arrayminus=(ci95_lo-means).abs())
+        array=max_quality-means,
+        arrayminus=CI_below)
     # create figure object
     fig = go.Figure()
     # adding low quality score patch
