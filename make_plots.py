@@ -59,6 +59,31 @@ def sum_scores(directory, depth):
     return read_pos, sum_df
 
 
+def find_dropoff(directory, depth):
+    """This function find the position in the reads at which the average phred
+    quality score drops below a certain threshold. This is meant to inform the
+    user at which base to trim their reads"""
+    read_pos, sum_df = sum_scores(directory, depth)
+    means = sum_df.mean()
+    pos1 = next((position for position,
+                 score in enumerate(means) if score < 30), None)
+    pos2 = next((position for position,
+                 score in enumerate(means) if score < 25), None)
+    pos3 = next((position for position,
+                 score in enumerate(means) if score < 20), None)
+    pos4 = next((position for position,
+                 score in enumerate(means) if score < 15), None)
+    print('the average quality of your reads drops below a phred score of 30 at position',
+          str(pos1))    
+    print('the average quality of your reads drops below a phred score of 25 at position',
+          str(pos2))
+    print('the average quality of your reads drops below a phred score of 20 at position',
+          str(pos3))
+    print('the average quality of your reads drops below a phred score of 15 at position',
+          str(pos4))
+    return
+
+
 def plot_qualities(directory, depth):
     """This function takes a directory and a sampling depth as parameters
     and calls the sum_scores function to create dataframe with a sample
