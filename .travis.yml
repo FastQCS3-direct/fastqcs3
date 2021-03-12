@@ -5,6 +5,8 @@ language: python
 matrix:
         include:
                 - python: 3.6
+                - python: 3.7
+                - python: 3.8
 
 # what branches
 branches:
@@ -13,10 +15,10 @@ branches:
 
 # conda install and add to path
 before_install:
-        - wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+        - wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
         - chmod +x miniconda.sh
         - ./miniconda.sh -b
-        - export PATH="/home/travis/miniconda3/bin:$PATH"
+        - export PATH=/home/travis/miniconda3/bin:$PATH
         - conda update --yes conda
           #- source $(conda info --root)/etc/profile.d/conda/sh
 
@@ -27,7 +29,7 @@ install:
         - conda install --yes coverage coveralls #flake8
 
 # before main script run commmands
-before_script:
+#before_script:
         #- flake8
 
 # commands
