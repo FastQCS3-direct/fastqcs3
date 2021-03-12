@@ -53,7 +53,7 @@ def sum_scores(directory, depth):
     to the existing dataframe of scores"""
     sum_df = pd.DataFrame()
     for file in os.listdir(directory):
-        sample_scores = get_scores(str(directory+file), depth)
+        sample_scores = get_scores(directory+'/'+file, depth)
         sum_df = sum_df.append(sample_scores, ignore_index=True)
     read_pos = sum_df.columns.to_list()
     return read_pos, sum_df
