@@ -49,10 +49,36 @@ qiime metadata tabulate \
   --m-input-file outputs/taxonomy.qza \
   --o-visualization outputs/taxonomy.qzv
 
+qiime phylogeny align-to-tree-mafft-fasttree \
+  --i-sequences outputs/rep-seqs.qza \
+  --o-alignment outputs/aligned-rep-seqs.qza \
+  --o-masked-alignment outputs/masked-aligned-rep-seqs.qza \
+  --o-tree outputs/unrooted-tree.qza \
+  --o-rooted-tree outputs/rooted-tree.qza
+
+qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny outputs/rooted-tree.qza \
+  --i-table outputs/table.qza \
+  --p-sampling-depth 1103 \
+  --m-metadata-file sample-metadata.tsv \
+  --output-dir outputs/core-metrics-results
+
 unzip outputs/taxonomy.qza -d newpath
 cp newpath/*/data/taxonomy.tsv data/taxonomy.tsv
 rm -r newpath
 
 unzip outputs/table.qza -d newpath
 cp newpath/*/data/feature-table.biom data/feature-table.biom
+rm -r newpath
+
+qiime tools export \
+   --input-path outputs/demux.qzv \
+   --output-path data/exported_demux
+
+qiime tools export \
+   --input-path outputs/demux.qza \
+   --output-path data/exported_demux
+
+unzip outputs/deblur-stats.qza -d newpath
+cp newpath/*/data/stats.csv  data/stats.csv
 rm -r newpath
