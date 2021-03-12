@@ -4,9 +4,11 @@ import data_prep_stack_barplots as prep
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from qiime2.plugins import feature_table
+from qiime2 import Artifact
 
 def auto_qiime(directory,trimlength):
-"""function to run auto qiime2 bash script, outputs data in appropriate form to work with for plotting"""
+    """function to run auto qiime2 bash script, outputs data in appropriate form to work with for plotting"""
     subprocess.run(['bash','-c','bash auto_qiime.sh '+directory+' '+trimlength])
 
 """takes inputs of directory of .fastq files, trim length, and sampling depth for running the auto qiime script and creating quality plots"""
@@ -19,21 +21,28 @@ else:
 
 samp_depth = input("Desired sampling depth:")
 if samp_depth.isdigit():
-    pass
+    samp_depth = int(samp_depth)
 else:
     raise TypeError('sampling depth must be a positive integer')
 
 """runs auto_qiime function"""
 auto_qiime(directory,trimlength)
 
-"""read in newly created taxonomy AND FEATURE TABLE data file to pandas"""
+"""read in newly created taxonomy data file to pandas"""
 taxonomy = pd.read_csv("data/taxonomy.tsv", sep='\t')
 taxonomy[['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species']] = taxonomy['Taxon'].str.split(';', expand=True)
 taxonomy.set_index('Feature ID', inplace=True)
-# also get table working here and whatever kaylyn uses for her stuff
+
+"""reads in table.qza file from qiime2 into DataFrame"""
+unrarefied_table = Artifact.load('table.qza')
+rarefy_result = feature_table.methods.rarefy(table=unrarefied_table, sampling_depth=100)
+rarefied_table = rarefy_result.rarefied_table
+table = rarefied_table.view(pd.DataFrame)
+
+# add in any other data structures that need to be read in
 
 """pre process data for relative abundance stacked bar plots"""
-kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df = prep.prepare_data_stacked_barplots(t, tax)
+kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df = prep.prepare_data_stacked_barplots(table, taxonomy)
 
 """create plotly figures"""
 king_plot = make_plots.plotly_stacked_barplot(kingdom_df, 'Kingdom Relative Abundances')
@@ -43,7 +52,8 @@ ord_plot = make_plots.plotly_stacked_barplot(order_df, 'Order Relative Abundance
 fam_plot = make_plots.plotly_stacked_barplot(family_df, 'Family Relative Abundances')
 gen_plot = make_plots.plotly_stacked_barplot(genus_df, 'Genus Relative Abundances')
 spec_plot = make_plots.plotly_stacked_barplot(species_df, 'Species Relative Abundances')
-
 qual_plot = make_plots.plot_qualities(directory, samp_depth)
+# add diversity plots
 
-"""create dash layout"""
+
+# add code for dash layout
