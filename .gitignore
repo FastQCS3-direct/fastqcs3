@@ -3,3 +3,7 @@ __pycache__/
 emp-single-end-sequences/
 *.tsv
 *.log
+*.qza
+872a0592-bb99-4296-941e-37dbbdff0d7a/
+data/
+outputs/
