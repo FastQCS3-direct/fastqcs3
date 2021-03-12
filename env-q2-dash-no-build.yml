@@ -1,0 +1,4 @@
+name: env-q2-dash-no-build
+channels:
+  - defaults
+prefix: /Users/evanpepper/miniconda3/envs/env-q2-dash-no-build
