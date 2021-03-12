@@ -53,10 +53,35 @@ def sum_scores(directory, depth):
     to the existing dataframe of scores"""
     sum_df = pd.DataFrame()
     for file in os.listdir(directory):
-        sample_scores = get_scores(str(directory+file), depth)
+        sample_scores = get_scores(directory+'/'+file, depth)
         sum_df = sum_df.append(sample_scores, ignore_index=True)
     read_pos = sum_df.columns.to_list()
     return read_pos, sum_df
+
+
+def find_dropoff(directory, depth):
+    """This function find the position in the reads at which the average phred
+    quality score drops below a certain threshold. This is meant to inform the
+    user at which base to trim their reads"""
+    read_pos, sum_df = sum_scores(directory, depth)
+    means = sum_df.mean()
+    pos1 = next((position for position,
+                 score in enumerate(means) if score < 30), None)
+    pos2 = next((position for position,
+                 score in enumerate(means) if score < 25), None)
+    pos3 = next((position for position,
+                 score in enumerate(means) if score < 20), None)
+    pos4 = next((position for position,
+                 score in enumerate(means) if score < 15), None)
+    print('the average quality of your reads drops below a phred score of 30 at position',
+          str(pos1))    
+    print('the average quality of your reads drops below a phred score of 25 at position',
+          str(pos2))
+    print('the average quality of your reads drops below a phred score of 20 at position',
+          str(pos3))
+    print('the average quality of your reads drops below a phred score of 15 at position',
+          str(pos4))
+    return
 
 
 def plot_qualities(directory, depth):

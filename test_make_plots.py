@@ -1,4 +1,4 @@
-from make_plots import get_scores, sum_scores, plot_qualities
+from make_plots import get_scores, sum_scores, plot_qualities, find_dropoff
 # from make_plots import  plotly_stacked_barplot
 import pandas as pd
 import plotly.graph_objects as go
@@ -34,4 +34,12 @@ def test_plot_qualities_1():
     fig = plot_qualities(directory, depth)
     assert isinstance(fig, go.Figure), 'the \
     figure being returned is not the type of object we expect'
+    return
+
+
+def test_find_dropoff():
+    directory = '/Users/evanpepper/Desktop/exported-demux/'
+    depth = 50
+    results = find_dropoff(directory, depth)
+    assert isinstance(depth, int), 'depth must be an int, got ' + str(type(depth))
     return
