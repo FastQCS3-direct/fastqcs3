@@ -72,6 +72,13 @@ cp newpath/*/data/feature-table.biom data/feature-table.biom
 rm -r newpath
 
 qiime tools export \
+   --input-path outputs/demux.qzv \
+   --output-path data/exported_demux
+
+qiime tools export \
    --input-path outputs/demux.qza \
    --output-path data/exported_demux
 
+unzip outputs/deblur-stats.qza -d newpath
+cp newpath/*/data/stats.csv  data/stats.csv
+rm -r newpath
