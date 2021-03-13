@@ -72,6 +72,6 @@ qiime tools export \
    --input-path outputs/demux.qza \
    --output-path data/exported_demux
 
-unzip outputs/deblur-stats.qza -d newpath
-cp newpath/*/data/stats.csv  data/stats.csv
+unzip outputs/stats-dada2.qza -d newpath
+cp newpath/*/data/stats.tsv  data/stats.tsv
 rm -r newpath
