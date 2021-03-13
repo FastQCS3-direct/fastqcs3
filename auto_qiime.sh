@@ -18,27 +18,20 @@ qiime demux summarize \
   --i-data outputs/demux.qza \
   --o-visualization outputs/demux.qzv
 
-qiime quality-filter q-score \
- --i-demux outputs/demux.qza \
- --o-filtered-sequences outputs/demux-filtered.qza \
- --o-filter-stats outputs/demux-filter-stats.qza
-
-qiime deblur denoise-16S \
-  --i-demultiplexed-seqs outputs/demux-filtered.qza \
-  --p-trim-length $2 \
-  --o-representative-sequences outputs/rep-seqs-deblur.qza \
-  --o-table outputs/table-deblur.qza \
-  --p-sample-stats \
-  --o-stats outputs/deblur-stats.qza
+qiime dada2 denoise-single \
+  --i-demultiplexed-seqs outputs/demux.qza \
+  --p-trim-left 0 \
+  --p-trunc-len $2 \
+  --o-representative-sequences outputs/rep-seqs-dada2.qza \
+  --o-table outputs/table-dada2.qza \
+  --o-denoising-stats outputs/stats-dada2.qza
 
 qiime metadata tabulate \
-  --m-input-file outputs/demux-filter-stats.qza \
-  --o-visualization outputs/demux-filter-stats.qzv
-qiime deblur visualize-stats \
-  --i-deblur-stats outputs/deblur-stats.qza \
-  --o-visualization outputs/deblur-stats.qzv
-mv outputs/rep-seqs-deblur.qza outputs/rep-seqs.qza
-mv outputs/table-deblur.qza outputs/table.qza
+  --m-input-file outputs/stats-dada2.qza \
+  --o-visualization outputs/stats-dada2.qzv
+
+mv outputs/rep-seqs-dada2.qza outputs/rep-seqs.qza
+mv outputs/table-dada2.qza outputs/table.qza
 
 qiime feature-classifier classify-sklearn \
   --i-classifier gg-13-8-99-515-806-nb-classifier.qza \
