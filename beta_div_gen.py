@@ -4,6 +4,19 @@ from skbio.stats.ordination import pcoa
 import plotly.express as px
 import os
 
+def sample_cols(directory):
+    '''function that fetches relevant columns names from sample metadata, omitting barcode sequences and sample id'''
+    # Load metadata
+    metadata = pd.read_csv(directory+'/metadata.tsv', sep='\t')
+    
+    # Fetch and return relevant columns
+    cols = list(metadata.columns)
+    cols.pop(0)
+    cols.pop(0)
+    
+    return cols
+    
+
 def bray_beta_diversity_clean(directory):
     """function that cleans data and generates final data frame for bray-curtis pcoa beta diversity plots"""
     

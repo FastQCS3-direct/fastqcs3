@@ -41,6 +41,7 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 df = alpha_div_gen.alpha_diversity_plot('data')
 
+beta_cols = beta_div_gen.sample_cols('data')
 bray = beta_div_gen.bray_beta_diversity_clean('data')
 unifrac = beta_div_gen.unifrac_beta_diversity_clean('data')
 
@@ -77,25 +78,28 @@ summary_page = html.Div([
 
 alpha_page = html.Div([
     html.P("x-axis:"),
-    dcc.RadioItems(
+    dcc.Dropdown(
         id='x-axis', 
         options=[{'value': x, 'label': x}  
                  for x in df.columns],
-        value='subject', 
-        labelStyle={'display': 'inline-block'}
+        value='subject'
     ),
     html.P("y-axis:"),
-    dcc.RadioItems(
+    dcc.Dropdown(
         id='y-axis', 
         options=[{'value': x, 'label': x} 
                  for x in ['shannon_entropy','faith_diversity','pielou_evenness','observed_features']],
-        value='shannon_entropy', 
-        labelStyle={'display': 'inline-block'}
+        value='shannon_entropy',
     ),
     dcc.Graph(id="alpha-plot"),
 ])
 
 beta_page = html.Div([
+    dcc.Dropdown(id='meta-col',
+                 options=[{'value': x, 'label': x}
+                          for x in beta_cols],
+                 value=beta_cols[0]
+                ),
     html.P("Beta-metric:"),
     dcc.RadioItems(
         id='beta_type', 
@@ -158,10 +162,11 @@ def generate_alpha_chart(x, y):
 
 @app.callback(
     dash.dependencies.Output("beta-plot", "figure"), 
-    [dash.dependencies.Input("beta_type", "value")])
-def generate_beta_chart(beta_type):
+    [dash.dependencies.Input("beta_type", "value"),
+     dash.dependencies.Input('meta-col', 'value')])
+def generate_beta_chart(beta_type, meta_col):
     df = beta_dict[beta_type]
-    fig = px.scatter_3d(df, x='PC1', y='PC2', z='PC3', color='body-site')
+    fig = px.scatter_3d(df, x='PC1', y='PC2', z='PC3', color=meta_col)
     return fig
 
 if __name__ == '__main__':
