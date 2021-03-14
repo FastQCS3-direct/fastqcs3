@@ -75,3 +75,31 @@ qiime tools export \
 unzip outputs/stats-dada2.qza -d newpath
 cp newpath/*/data/stats.tsv  data/stats.tsv
 rm -r newpath
+
+unzip outputs/core-metrics-results/shannon_vector.qza -d newpath
+mv newpath/*/data/alpha-diversity.tsv data/shannon-alpha-diversity.tsv
+mv newpath/*/provenance/action/metadata.tsv data/metadata.tsv
+rm -r newpath
+
+unzip outputs/core-metrics-results/faith_pd_vector.qza -d newpath
+mv newpath/*/data/alpha-diversity.tsv data/faith-alpha-diversity.tsv
+rm -r newpath
+
+unzip outputs/core-metrics-results/evenness_vector.qza -d newpath
+mv newpath/*/data/alpha-diversity.tsv data/pielou-alpha-diversity.tsv
+rm -r newpath
+
+unzip outputs/core-metrics-results/observed_features_vector.qza -d newpath
+mv newpath/*/data/alpha-diversity.tsv data/observed-features-alpha-diversity.tsv
+rm -r newpath
+
+unzip outputs/core-metrics-results/bray_curtis_distance_matrix.qza -d newpath
+mv newpath/*/data/distance-matrix.tsv data/bray-distance-matrix.tsv
+rm -r newpath
+
+unzip outputs/core-metrics-results/weighted_unifrac_distance_matrix.qza -d newpath
+mv newpath/*/data/distance-matrix.tsv data/unifrac_distance_matrix.tsv
+rm -r newpath
+
+
+
