@@ -67,10 +67,11 @@ fam_plot = make_plots.plotly_stacked_barplot(family_df, 'Family Relative Abundan
 gen_plot = make_plots.plotly_stacked_barplot(genus_df, 'Genus Relative Abundances')
 spec_plot = make_plots.plotly_stacked_barplot(species_df, 'Species Relative Abundances')
 qual_plot = make_plots.plot_qualities(directory, samp_depth)
+qual_hist = make_plots.quality_hist()
 
 # Loading all plot files into a pkl file
 
 filename = basename + '.pkl'
 
 with open(filename, 'wb') as f:
-    pickle.dump([king_plot, phy_plot, class_plot, ord_plot, fam_plot, gen_plot, spec_plot, qual_plot], f)
+    pickle.dump([king_plot, phy_plot, class_plot, ord_plot, fam_plot, gen_plot, spec_plot, qual_plot, qual_hist], f)

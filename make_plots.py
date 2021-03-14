@@ -13,6 +13,17 @@ from Bio import SeqIO
 # can be done with conda install gzip
 import gzip
 
+def quality_hist():
+    directory = 'data/exported_demux/'
+    filename = 'per-sample-fastq-counts.tsv'
+    reads_per = pd.read_csv(directory+filename, sep='\t')
+    reads_per_hist = go.Figure(data=[go.Histogram(x=reads_per['forward sequence count'], nbinsx=reads_per.shape[0])])
+    reads_per_hist.update_layout(
+    title_text='Histogram of reads per sample', # title of plot
+    xaxis_title_text='Number of sequences', # xaxis label
+    yaxis_title_text='Number of samples', # yaxis label
+    )
+    return reads_per_hist
 
 def get_scores(filename, depth):
     """Inner most function for quality score plotting, makes a record
