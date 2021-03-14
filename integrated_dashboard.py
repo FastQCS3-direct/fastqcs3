@@ -40,7 +40,7 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 df = alpha_div_gen.alpha_diversity_plot('data')
-'''
+
 bray = beta_div_gen.bray_beta_diversity_clean('data')
 unifrac = beta_div_gen.unifrac_beta_diversity_clean('data')
 
@@ -48,7 +48,7 @@ beta_dict = {
     'bray': bray,
     'unifrac': unifrac
 }
-'''
+
 # assume you have a "long-form" data frame
 # see https://plotly.com/python/px-arguments/ for more options
 
@@ -94,19 +94,19 @@ alpha_page = html.Div([
     ),
     dcc.Graph(id="alpha-plot"),
 ])
-'''
+
 beta_page = html.Div([
     html.P("Beta-metric:"),
     dcc.RadioItems(
         id='beta_type', 
         options=[{'value': x, 'label': x} 
                  for x in ['bray', 'unifrac']],
-        value='shannon_entropy', 
+        value='bray', 
         labelStyle={'display': 'inline-block'}
     ),
     dcc.Graph(id="beta-plot"),
 ])
-'''
+
 # Main Dash Area
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -137,7 +137,9 @@ app.layout = html.Div(children=[
 def display_page(pathname):
     page_dict = {
         'summary': summary_page,
-        'alpha': alpha_page}
+        'alpha': alpha_page,
+        'beta': beta_page
+    }
     return page_dict[pathname]
 
 @app.callback(
@@ -153,7 +155,7 @@ def update_graph(figure_name):
 def generate_alpha_chart(x, y):
     fig = px.box(df, x=x, y=y)
     return fig
-'''
+
 @app.callback(
     dash.dependencies.Output("beta-plot", "figure"), 
     [dash.dependencies.Input("beta_type", "value")])
@@ -161,6 +163,6 @@ def generate_beta_chart(beta_type):
     df = beta_dict[beta_type]
     fig = px.scatter_3d(df, x='PC1', y='PC2', z='PC3', color='body-site')
     return fig
-'''
+
 if __name__ == '__main__':
     app.run_server(host='127.0.0.1', port='8050', debug=False)
