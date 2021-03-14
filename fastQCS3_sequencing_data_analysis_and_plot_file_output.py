@@ -49,7 +49,7 @@ taxonomy.shape
 
 """reads in table.qza file from qiime2 into DataFrame"""
 unrarefied_table = Artifact.load('outputs/table.qza')
-rarefy_result = feature_table.methods.rarefy(table=unrarefied_table, sampling_depth=samp_depth)
+rarefy_result = feature_table.methods.rarefy(table=unrarefied_table, sampling_depth=100)
 rarefied_table = rarefy_result.rarefied_table
 table = rarefied_table.view(pd.DataFrame)
 
