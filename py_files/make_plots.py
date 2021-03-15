@@ -95,7 +95,7 @@ def find_dropoff(directory, depth):
         print('\nYour sequence quality scores are awesome throughout the whole length of your reads!', '\n',
               'Enter 0 for trim length to retain the entire length of your reads.')
     else:
-        continue
+        pass
     return
 
 

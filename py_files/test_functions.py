@@ -1,6 +1,7 @@
-from make_plots import get_scores, sum_scores, plot_qualities, find_dropoff
+from make_plots import get_scores, sum_scores, plot_qualities, find_dropoff, get_feature_info
 from data_prep_stack_barplots import reduce_taxonomy_df, make_taxon_list, make_tax_dfs, fill_tax_dfs, prepare_data_stacked_barplots
 import pandas as pd
+import numpy as np
 import plotly.graph_objects as go
 from alpha_div_gen import alpha_diversity_plot
 from beta_div_gen import sample_cols, bray_beta_diversity_clean, unifrac_beta_diversity_clean
@@ -131,8 +132,8 @@ def test_reduce_taxonomy_df():
 
 def test_get_scores_1():
     """This function checks the datatype of the output score"""
-    filename = '../jdm_sample_seqs/12_S12_L001_R1_001.fastq.gz'
-    depth = 1000
+    filename = '../demo_data_v2/A10_S10_L001_R1_001.fastq.gz'
+    depth = 500
     result = get_scores(filename, depth)
     assert isinstance(result, pd.DataFrame), 'scores are \
     not being output as a dataframe'
@@ -142,8 +143,8 @@ def test_get_scores_1():
 def test_sum_scores_1():
     """This function checks the datatype of the objects returned
     by the sum_scores function"""
-    directory = '../jdm_sample_seqs/'
-    depth = 1000
+    directory = '../demo_data_v2/'
+    depth = 500
     read_pos, sum_df = sum_scores(directory, depth)
     assert isinstance(read_pos, list) and isinstance(
         sum_df, pd.DataFrame), f'sum_scores function is returning \
@@ -154,8 +155,8 @@ def test_sum_scores_1():
 def test_plot_qualities_1():
     """This function checks the datatype of the figure object
     returned by the plot_qualities function"""
-    directory = '../jdm_sample_seqs/'
-    depth = 1000
+    directory = '../demo_data_v2/'
+    depth = 500
     fig = plot_qualities(directory, depth)
     assert isinstance(fig, go.Figure), 'the \
     figure being returned is not the type of object we expect'
@@ -163,10 +164,31 @@ def test_plot_qualities_1():
 
 
 def test_find_dropoff():
-    directory = '/Users/evanpepper/Desktop/exported-demux/'
-    depth = 50
+    """This function tests to make sure the depth input is an int"""
+    directory = '../demo_data_v2/'
+    depth = 500
     results = find_dropoff(directory, depth)
     assert isinstance(depth, int), 'depth must be an int, got ' + str(type(depth))
+    return
+
+def test_get_feature_info():
+    """This function tests to see if the suggestion depth returned
+    is of int type, because that is the type required as input by the
+    user"""
+    info = get_feature_info('sample-frequency-detail.csv')
+    colnames = ['sample-id', 'num_features']
+    features = pd.read_csv('sample-frequency-detail.csv', skiprows=1, names=colnames)
+    min_feats = np.min(features['num_features'].values).astype(int)
+    max_feats = np.max(features['num_features'].values).astype(int)
+    mean_feats = np.mean(features['num_features'].values).astype(int)
+    stdev_feats = np.std(features['num_features'].values).astype(int)
+    
+    suggest = 0
+    if min_feats <= 100:
+        suggest = mean_feats - stdev_feats
+    elif min_feats > 100:
+        suggest = min_feats - 1
+    assert isinstance(suggest, np.int64), 'suggestion is not an int, got ' + str(type(suggest))
     return
 
 def test_bray_beta_diversity_clean_1():
