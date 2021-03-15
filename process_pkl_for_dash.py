@@ -88,6 +88,7 @@ else:
     raise TypeError('trim length input must be a positive integer')
     
 # this second block will run dada2 and the following few commands
+print('\n...running dada2...this may take a few minutes...')
 auto_dada2(trimlength)
 
 # calling get_feature_info to get some information on feature counts
