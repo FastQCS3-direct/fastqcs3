@@ -11,8 +11,8 @@ import make_plots
 from make_plots import get_scores, sum_scores, plot_qualities
 
 
-directory = '../../../exported-demux/'
-filename = 'per-sample-fastq-counts.tsv'
+directory = 'data/exported_demux'
+filename = '/per-sample-fastq-counts.tsv'
 reads_per = pd.read_csv(directory+filename, sep='\t')
 
 
@@ -70,4 +70,4 @@ app.layout = html.Div(children=[
 ])
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host='127.0.0.1', port='8050', debug=True)

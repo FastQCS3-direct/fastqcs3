@@ -24,13 +24,13 @@ if trimlength.isdigit():
     pass
 else:
     raise TypeError('trim length input must be a positive integer')
-
+'''
 samp_depth = input("sampling depth:")
 if samp_depth.isdigit():
     samp_depth = int(samp_depth)
 else:
     raise TypeError('sampling depth must be a positive integer')
-    
+'''   
 basename = input('Please input your filename:')
 
 if (' ' in basename):
@@ -49,7 +49,9 @@ taxonomy.shape
 
 """reads in table.qza file from qiime2 into DataFrame"""
 unrarefied_table = Artifact.load('outputs/table.qza')
-rarefy_result = feature_table.methods.rarefy(table=unrarefied_table, sampling_depth=100)
+# call some bash script here for stats output, then ask people for their decided sampling depth
+# samp_depth = input('Whatchu decide for sampling depth')
+rarefy_result = feature_table.methods.rarefy(table=unrarefied_table, sampling_depth=100) # sampling_depth=samp_depth later?
 rarefied_table = rarefy_result.rarefied_table
 table = rarefied_table.view(pd.DataFrame)
 
@@ -66,7 +68,8 @@ ord_plot = make_plots.plotly_stacked_barplot(order_df, 'Order Relative Abundance
 fam_plot = make_plots.plotly_stacked_barplot(family_df, 'Family Relative Abundances')
 gen_plot = make_plots.plotly_stacked_barplot(genus_df, 'Genus Relative Abundances')
 spec_plot = make_plots.plotly_stacked_barplot(species_df, 'Species Relative Abundances')
-qual_plot = make_plots.plot_qualities(directory, samp_depth)
+qual_plot = make_plots.plot_qualities('data/exported_demux/', 500)
+# qual_plot = make_plots.plot_qualities(directory, 500)
 qual_hist = make_plots.quality_hist()
 
 # Loading all plot files into a pkl file

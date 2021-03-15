@@ -4,6 +4,7 @@
 # visit http://127.0.0.1:8050/ in your web browser.
 
 import dash
+import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
@@ -34,6 +35,10 @@ fig_dict = {
     'spec': spec_plot,
     'class': class_plot,
 }
+
+directory_2 = 'data/exported_demux'
+filename_2 = '/per-sample-fastq-counts.tsv'
+reads_per = pd.read_csv(directory_2+filename_2, sep='\t')
 
 # Generating data for Alpha diversity
    
@@ -72,7 +77,19 @@ taxonomy_page = html.Div([
 
 summary_page = html.Div([
     dcc.Graph(figure=qual_plot),
-    dcc.Graph(figure=qual_hist)
+    dcc.Graph(figure=qual_hist),
+    html.Div([
+        
+        html.Div(children='''
+            Table of samples and their total read counts
+        '''),
+        
+        dash_table.DataTable(
+            id='reads-per-table',
+            columns=[{"name": i, "id": i} for i in reads_per.columns],
+            data=reads_per.to_dict('records'),
+        ),  
+    ]),
 ])
 
 alpha_page = html.Div([
