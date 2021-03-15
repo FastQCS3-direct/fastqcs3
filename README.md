@@ -69,8 +69,12 @@ A demo video can be found [here](link to Ben's video?). We have provided two set
 #### Important Notes about Usage
 	1. Your fastq files should be labelled with an alphabetical character in front:
 		i.e. `A1_S1_L001_R1_001.fastq.gz` instead of `1_S1_LOO1_R1_001.fastq.gz`
-	2. If running multiple datasets at once, you will have to change the host name on line 204 of the `fastQCS3_dashboard.py` file every time you run a new dataset to visualize all at the same time.
-		i.e. `app.run_server(host='127.0.0.1', port='8050', debug=False)` to `app.run_server(host='128.0.0.1', port='8050', debug=False)`
+		
+	2. If running multiple datasets at once, you will have to change the host name on line 204 of
+	the `fastQCS3_dashboard.py` file every time you run a new dataset to visualize all at the same time.
+		i.e. `app.run_server(host='127.0.0.1', port='8050', debug=False)` followed by
+		`app.run_server(host='128.0.0.1', port='8050', debug=False)`
 
 #### Notes about CI
-	CI can be difficult when running in such a large and complicated environment (like one containing QIIME2). Check back for updates about using continuous integration through Travis CI.
+	CI can be difficult when running in such a large and complicated environment (like one containing QIIME2).
+	Check back for updates about using continuous integration through Travis CI.
