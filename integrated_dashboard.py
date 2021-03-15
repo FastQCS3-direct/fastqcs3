@@ -13,6 +13,7 @@ import pickle
 import alpha_div_gen
 import beta_div_gen
 
+# Summary statistics file import and processing for callback
 
 basename = input('Name of visualization file:')
 
@@ -22,7 +23,7 @@ else:
     filename = basename + '.pkl'
 
 with open(filename, 'rb') as f:
-    king_plot, phy_plot, class_plot, ord_plot, fam_plot, gen_plot, spec_plot, qual_plot = pickle.load(f)
+    king_plot, phy_plot, class_plot, ord_plot, fam_plot, gen_plot, spec_plot, qual_plot, qual_hist = pickle.load(f)
 
 fig_dict = {
     'fam': fam_plot,
@@ -32,14 +33,13 @@ fig_dict = {
     'phy': phy_plot,
     'spec': spec_plot,
     'class': class_plot,
-    'qual': qual_plot
 }
-    
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
+# Generating data for Alpha diversity
+   
 df = alpha_div_gen.alpha_diversity_plot('data')
+
+# Generating data for Beta diversity
 
 beta_cols = beta_div_gen.sample_cols('data')
 bray = beta_div_gen.bray_beta_diversity_clean('data')
@@ -50,41 +50,40 @@ beta_dict = {
     'unifrac': unifrac
 }
 
-# assume you have a "long-form" data frame
-# see https://plotly.com/python/px-arguments/ for more options
-
 # Defines pages for summary stats and Alpha diversity
 
-summary_page = html.Div([
+taxonomy_page = html.Div([
     dcc.Dropdown(
         id='data_selector',
         options=[
-            {'label': 'plot quality', 'value': 'qual'},
-            {'label': 'family', 'value': 'fam'},
-            {'label': 'genus', 'value': 'gen'},
-            {'label': 'kingdom', 'value': 'king'},
-            {'label': 'order', 'value': 'ord'},
-            {'label': 'phylum', 'value': 'phy'},
-            {'label': 'species', 'value': 'spec'},
-            {'label': 'class', 'value': 'class'}
+            {'label': 'Family', 'value': 'fam'},
+            {'label': 'Genus', 'value': 'gen'},
+            {'label': 'Kingdom', 'value': 'king'},
+            {'label': 'Order', 'value': 'ord'},
+            {'label': 'Phylum', 'value': 'phy'},
+            {'label': 'Species', 'value': 'spec'},
+            {'label': 'Class', 'value': 'class'}
         ],
-        value='qual' # Default value upon startup
+        value='fam' # Default value upon startup
     ),
-    
-    #dcc.Graph(id='qual', figure=qual_plot),
     
     dcc.Graph(id='selected_plot')
 ])
 
+summary_page = html.Div([
+    dcc.Graph(figure=qual_plot),
+    dcc.Graph(figure=qual_hist)
+])
+
 alpha_page = html.Div([
-    html.P("x-axis:"),
+    html.P("Subject Attributes (x-axis)"),
     dcc.Dropdown(
         id='x-axis', 
         options=[{'value': x, 'label': x}  
                  for x in df.columns],
         value='subject'
     ),
-    html.P("y-axis:"),
+    html.P("Alpha Diversity metric (y-axis)"),
     dcc.Dropdown(
         id='y-axis', 
         options=[{'value': x, 'label': x} 
@@ -95,12 +94,13 @@ alpha_page = html.Div([
 ])
 
 beta_page = html.Div([
+    html.P("Subject Attributes"),
     dcc.Dropdown(id='meta-col',
                  options=[{'value': x, 'label': x}
                           for x in beta_cols],
                  value=beta_cols[0]
                 ),
-    html.P("Beta-metric:"),
+    html.P("Beta Diversity metric:"),
     dcc.RadioItems(
         id='beta_type', 
         options=[{'value': x, 'label': x} 
@@ -118,7 +118,8 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(children=[
-    html.H1(children='*fastQCS3*: Data Processing and Visualization'),
+    html.H1(children=dcc.Markdown('**fastQCS3**: Data Processing and Visualization')),
+    html.H2(children=dcc.Markdown('*Visualization module')),
     
     html.Div(children='''
         Created by: Nick Bohmann, Cassandra Maranas, Evan Pepper, Kaylyn Torkelson, Ben Nguyen
@@ -126,15 +127,18 @@ app.layout = html.Div(children=[
     
     dcc.RadioItems(
         id='display-page', 
-        options=[{'label': 'summary stats', 'value': 'summary'},
-                 {'label': 'alpha diversity', 'value': 'alpha'},
-                 {'label': 'beta diversity', 'value': 'beta'}],
-        value='alpha', 
-        labelStyle={'display': 'inline-block'}
+        options=[{'label': 'Summary Statistics', 'value': 'summary'},
+                 {'label': 'Taxonomy Statistics', 'value': 'taxonomy'},
+                 {'label': 'Alpha Diversity Statistics', 'value': 'alpha'},
+                 {'label': 'Beta Diversity Statistics', 'value': 'beta'}
+                ],
+        value='summary', 
     ),
     
     html.Div(id='page-content')
 ])
+
+# Main callback components
 
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('display-page', 'value')])
@@ -142,7 +146,8 @@ def display_page(pathname):
     page_dict = {
         'summary': summary_page,
         'alpha': alpha_page,
-        'beta': beta_page
+        'beta': beta_page,
+        'taxonomy': taxonomy_page
     }
     return page_dict[pathname]
 
