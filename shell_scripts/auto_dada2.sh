@@ -2,6 +2,7 @@ qiime dada2 denoise-single \
   --i-demultiplexed-seqs outputs/demux.qza \
   --p-trim-left 0 \
   --p-trunc-len $1 \
+  --verbose \
   --o-representative-sequences outputs/rep-seqs-dada2.qza \
   --o-table outputs/table-dada2.qza \
   --o-denoising-stats outputs/stats-dada2.qza
