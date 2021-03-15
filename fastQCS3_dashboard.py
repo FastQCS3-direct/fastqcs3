@@ -11,8 +11,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import pickle
-import alpha_div_gen
-import beta_div_gen
+from  py_files import alpha_div_gen
+from py_files import beta_div_gen
 
 # suppressing warning messages
 import warnings

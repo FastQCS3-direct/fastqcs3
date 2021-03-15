@@ -5,8 +5,8 @@ import dash_html_components as html
 import pickle
 
 import subprocess
-import make_plots
-import data_prep_stack_barplots as prep
+from py_files import make_plots
+from py_files import data_prep_stack_barplots as prep
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
