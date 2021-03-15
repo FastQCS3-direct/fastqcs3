@@ -115,13 +115,9 @@ taxonomy.shape
 
 """reads in table.qza file from qiime2 into DataFrame"""
 unrarefied_table = Artifact.load('outputs/table.qza')
-# call some bash script here for stats output, then ask people for their decided sampling depth
-# samp_depth = input('Whatchu decide for sampling depth')
-rarefy_result = feature_table.methods.rarefy(table=unrarefied_table, sampling_depth=100) # sampling_depth=samp_depth later?
+rarefy_result = feature_table.methods.rarefy(table=unrarefied_table, sampling_depth=100) 
 rarefied_table = rarefy_result.rarefied_table
 table = rarefied_table.view(pd.DataFrame)
-
-# add in any other data structures that need to be read in
 
 """pre process data into dataframes for plotting taxonomy relative abundances in stacked barplots"""
 kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df = prep.prepare_data_stacked_barplots(table, taxonomy)
