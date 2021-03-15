@@ -15,7 +15,7 @@ from qiime2 import Artifact
 
 # print statements for user intro to software
 print('')
-print('WELCOME TO FASTQCS3! Before you begin:\n',
+print('WELCOME TO fastQCS3! Before you begin:\n',
       '\n',
       '1. Please make sure your .fastq.gz files are in a directory.\n',
       '2. If your sequences are still multiplexed:',
@@ -37,9 +37,8 @@ print('WELCOME TO FASTQCS3! Before you begin:\n',
 # def import_demuxed_data(directory):
 #       """function to run importing of pre-demultiplexed reads"""
 #     # make a bash file called auto_import.sh that imports demultiplexed reads
-#     subprocess.run(['bash','-c','bash shell_scripts/auto_import_betatesting.sh '+directory])
+#     subprocess.run(['bash','-c','bash shell_scripts/auto_import.sh '+directory])
 #     return
-
 
 def auto_demux(directory):
     """function to run importing and demultiplexing (demux) of multiplexed reads"""
@@ -107,7 +106,7 @@ else:
 auto_classify_phylo(sample_n_features)
 
 print('\n',
-      'QIIME2 has finished processing your data! Congrats!')
+      'fastQCS3 has finished processing your data! Congrats!')
     
 # prompting user to name their .pkl file
 basename = input('\nPlease give your visualization file a name:')
