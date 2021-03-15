@@ -83,15 +83,14 @@ def find_dropoff(directory, depth):
     pos3 = next((position for position,
                  score in enumerate(means) if score < 20), None)
     pos4 = next((position for position,
-                 score in enumerate(means) if score < 15), None)
-    print('the average quality of your reads drops below a phred score of 30 at position',
-          str(pos1))    
-    print('the average quality of your reads drops below a phred score of 25 at position',
-          str(pos2))
-    print('the average quality of your reads drops below a phred score of 20 at position',
-          str(pos3))
-    print('the average quality of your reads drops below a phred score of 15 at position',
-          str(pos4))
+                 score in enumerate(means) if score < 15), None) 
+    print('\n',
+          'Here is some information about the quality of your reads to help you choose a trim length\n',
+          '\n',
+          'the average quality of your reads drops below a phred score of 30 at position', pos1, '\n',
+          'the average quality of your reads drops below a phred score of 25 at position', pos2, '\n',
+          'the average quality of your reads drops below a phred score of 20 at position', pos3, '\n',
+          'the average quality of your reads drops below a phred score of 15 at position', pos4)
     return
 
 
