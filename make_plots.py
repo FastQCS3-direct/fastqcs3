@@ -176,3 +176,30 @@ def plotly_stacked_barplot(df, plot_title):
     fig.update_xaxes(title_text='Sample')
     fig.update_yaxes(title_text='Relative Frequency')
     return fig
+
+
+def get_feature_info(filepath):
+    """Given a feature table, will print stats on feature counts"""
+    colnames = ['sample-id', 'num_features']
+    features = pd.read_csv(filepath, skiprows=1, names=colnames)
+    min_feats = np.min(features['num_features'].values).astype(int)
+    max_feats = np.max(features['num_features'].values).astype(int)
+    mean_feats = np.mean(features['num_features'].values).astype(int)
+    stdev_feats = np.std(features['num_features'].values).astype(int)
+    
+    suggest = 0
+    if min_feats <= 100:
+        suggest = mean_feats - stdev_feats
+    elif min_feats > 100:
+        suggest = min_feats - 1
+    
+    print('\n',
+          'Here is some information about the number of features in your samples:\n',
+          '\n',
+          'Minimum number of features:', min_feats, '\n',
+          'Maximum number of features:', max_feats, '\n',
+          'Mean number of features:', mean_feats, '\n',
+          'Standard deviation of feature counts across samples:', stdev_feats, '\n',
+          '\n',
+          'We would suggest using a sampling depth of or below:', suggest)
+    return
