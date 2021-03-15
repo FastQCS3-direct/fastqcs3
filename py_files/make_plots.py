@@ -92,8 +92,10 @@ def find_dropoff(directory, depth):
           'the average quality of your reads drops below a phred score of 20 at position', pos3, '\n',
           'the average quality of your reads drops below a phred score of 15 at position', pos4, '\n')
     if pos1 == None:
-        print('Your sequence quality scores are awesome throughout the whole length of your reads!', '\n',
+        print('\nYour sequence quality scores are awesome throughout the whole length of your reads!', '\n',
               'Enter 0 for trim length to retain the entire length of your reads.')
+    else:
+        continue
     return
 
 
