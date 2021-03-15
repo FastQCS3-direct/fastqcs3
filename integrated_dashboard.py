@@ -61,13 +61,14 @@ taxonomy_page = html.Div([
     dcc.Dropdown(
         id='data_selector',
         options=[
+            {'label': 'Kingdom', 'value': 'king'},
+            {'label': 'Phylum', 'value': 'phy'},
+            {'label': 'Class', 'value': 'class'},
+            {'label': 'Order', 'value': 'ord'},
             {'label': 'Family', 'value': 'fam'},
             {'label': 'Genus', 'value': 'gen'},
-            {'label': 'Kingdom', 'value': 'king'},
-            {'label': 'Order', 'value': 'ord'},
-            {'label': 'Phylum', 'value': 'phy'},
             {'label': 'Species', 'value': 'spec'},
-            {'label': 'Class', 'value': 'class'}
+            
         ],
         value='fam' # Default value upon startup
     ),
