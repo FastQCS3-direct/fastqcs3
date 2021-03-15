@@ -3,7 +3,7 @@
 #### Main Repo for CHEM E 545/546 Final Project
 
 ## Overview/Purpose
-The purpose of this software is to give users a tool to quickly run quality checking immediately after sequencing results become available. The software will be designed to be a python installable package that is run from the command line. Designed modularly, the user will have the chance to specify what kind of FastQCS3 they want to perform.
+The purpose of this software is to give users, primarily microbiome researchers in academia, a tool to run quality checking immediately after sequencing results become available. This package is run from the command line and outputs a link to an interactive dashboard in a web browser. The four main analyses performed include: sequencing quality, relative abundances, alpha diversity metrics, and beta diversity metrics.
 
 ## Installing Dependencies
 This package relies on [QIIME2](https://docs.qiime2.org/2020.11/about/), a previously published microbiome analysis package, to pre-process input data and [Biopython](https://biopython.org/) to extract sequencing quality metrics.
@@ -77,4 +77,4 @@ A demo video can be found [here](link to Ben's video?). We have provided two set
 
 #### Notes about CI
 	CI can be difficult when running in such a large and complicated environment (like one containing QIIME2).
-	Check back for updates about using continuous integration through Travis CI.
+	Check back for updates about continuous integration through Travis CI.
