@@ -47,47 +47,72 @@ def auto_demux(directory):
     return
 
 def auto_dada2(trimlength):
-    """function to run auto qiime2 bash script, outputs data in appropriate form to work with for plotting"""
-    subprocess.run(['bash','-c','bash auto_dada2_finish.sh '+trimlength])
+    """function to run dada2"""
+    subprocess.run(['bash','-c','bash auto_dada2.sh '+trimlength])
+    return
+
+def auto_classify_phylo(sample_n_features):
+    """function for classification, phylogenetic analysis, outputs data in appropriate form to work with for plotting"""
+    subprocess.run(['bash','-c','bash auto_classify_phylo.sh '+sample_n_features])
     return
 
 # prompt user to input directory path
-directory = input('Please nter the name of your directory of .fastq.gz files (note: sequence data must be gzipped):')
+directory = input('Please enter the name of your directory of .fastq.gz files (note: sequence data must be gzipped):')
 # adding error statements
 if (' ' in directory):
     raise TypeError('Cannot have spaces in directory name')
 elif ('.' in directory):
     raise TypeError('Please avoid periods in directory name to avoid confusion')
+    
+
+# this needs to be implemented somehow:
 
 # calling importing functions based on user input
-if demux_status == 'n':
-    auto_demux(directory)
-elif demux_status == 'y':
-    import_demuxed_data(directory)
+# if demux_status == 'n':
+#     auto_demux(directory)
+# elif demux_status == 'y':
+#     import_demuxed_data(directory)
+
+auto_demux(directory)
 
 # calling find_dropoff function to print information about sequence quality by position
 # so that the user can choose their trimlength logically
 make_plots.find_dropoff('data/exported_demux/', 500)
 
 # prompting user to input trim length
-trimlength = input('Please choose a sequencing trim length:')
+trimlength = input('\nPlease choose a sequencing trim length:')
 # adding error statements
 if trimlength.isdigit():
     pass
 else:
     raise TypeError('trim length input must be a positive integer')
+    
+# runs the remainder of the bash code (needs to be broken up to include feature count info for user
+# this second block will run dada2
+auto_dada2(trimlength)
 
+# calling get_feature_info to get some information on feature counts
+# to let the user choose sampling depth
+make_plots.get_feature_info('data/features/sample-frequency-detail.csv')
+
+# prompting user to input sampling depth
+sample_n_features = input('\nPlease choose a sampling depth:')
+# adding error statements
+if sample_n_features.isdigit():
+    pass
+else:
+    raise TypeError('sampling depth input must be a positive integer')
+    
 # prompting user to name their .pkl file
-basename = input('Please input your filename:')
+basename = input('\nPlease give your visualization file a name:')
 # adding error statements
 if (' ' in basename):
     raise TypeError('Cannot have spaces in filename')
 elif ('.' in basename):
     raise TypeError('Please avoid periods in filename to avoid file type confusion')
-    
-# runs the remainder of the bash code (needs to be broken up to include feature count info for user
-auto_dada2(trimlength)
 
+# calling auto_classify_phylo to run remainder of commands
+auto_classify_phylo(sample_n_features)
 
 # everything below is for creating the plotting objects
 """read in newly created taxonomy data file to pandas"""
@@ -127,3 +152,6 @@ filename = basename + '.pkl'
 
 with open(filename, 'wb') as f:
     pickle.dump([king_plot, phy_plot, class_plot, ord_plot, fam_plot, gen_plot, spec_plot, qual_plot, qual_hist], f)
+    
+print('Now please run the following command to visualize your data in dash!\n',
+      'python integrated_dashboard.py')
