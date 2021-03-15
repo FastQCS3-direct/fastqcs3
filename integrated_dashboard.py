@@ -14,14 +14,22 @@ import pickle
 import alpha_div_gen
 import beta_div_gen
 
+# suppressing warning messages
+import warnings
+warnings.filterwarnings("ignore")
+
 # Summary statistics file import and processing for callback
 
-basename = input('Name of visualization file:')
+basename = input('\nPlease enter the name you gave your visualization file:')
 
 if ('.pkl' in basename):
     filename = basename
 else:
     filename = basename + '.pkl'
+    
+print('\n',
+      'Copy the URL where Dash is running into your browser!',
+      '\n')
 
 with open(filename, 'rb') as f:
     king_plot, phy_plot, class_plot, ord_plot, fam_plot, gen_plot, spec_plot, qual_plot, qual_hist = pickle.load(f)
