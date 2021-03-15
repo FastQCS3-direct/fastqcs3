@@ -1,0 +1,14 @@
+sample-id	donorID	body-site	family	relationship
+#q2:types	categorical	categorical	categorical	categorical
+1	S0001A	Stool	family 1	Patient
+2	S0001M	Stool	family 1	Mother
+3	S0001F	Stool	family 1	Father
+4	S0002A	Stool	family 2	Patient
+5	S0002F	Stool	family 2	Father
+6	S0002M	Stool	family 2	Mother
+7	S0001A	Saliva	family 1	Patient
+8	S0001F	Saliva	family 1	Father
+9	S0001M	Saliva	family 1	Mother
+10	S0002A	Saliva	family 2	Patient
+11	S0002F	Saliva	family 2	Father
+12	S0002M	Saliva	family 2	Mother
