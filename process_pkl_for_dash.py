@@ -13,46 +13,83 @@ import plotly.graph_objects as go
 from qiime2.plugins import feature_table
 from qiime2 import Artifact
 
+# print statements for user intro to software
+print('')
+print('WELCOME TO FASTQCS3! Before you begin:\n',
+      '\n',
+      '1. Please make sure your .fastq.gz files are in a directory.\n',
+      '2. If your sequences are still multiplexed:',
+      'make sure your barcodes.fastq.gz file lives in the same directory as your sequences.\n',
+      '3. Make sure your metadata file is in your current working directory and,\n',
+      '4. Make sure your metadata file is named "sample-metadata.tsv".\n')
+
+# for Nick (from Evan lol sorry I went ahead and did some of this):
+# this is where we should make another function that runs the appropriate dada2 commands
+# depending on if the sequence files are demultiplexed or not
+# something like:
+
+# demux_status = input('Are your fastq.gz sequence file(s) demultiplexed? (y/n):')
+# if demux_status == 'y' or 'n': # this might need to be string formatted
+#     pass
+# else:
+#     raise NameError('Please enter either y or n')
+
+# def import_demuxed_data(directory):
+#       """function to run importing of pre-demultiplexed reads"""
+#     # make a bash file called auto_import.sh that imports demultiplexed reads
+#     subprocess.run(['bash','-c','bash auto_import_betatesting.sh '+directory])
+#     return
+
+
 def auto_demux(directory):
-    """function to run auto qiime2 bash script, outputs data in appropriate form to work with for plotting"""
-    subprocess.run(['bash','-c','bash auto_demux_betatesting.sh '+directory])
+    """function to run importing and demultiplexing (demux) of multiplexed reads"""
+    subprocess.run(['bash','-c','bash auto_demux.sh '+directory])
     return
 
 def auto_dada2(trimlength):
     """function to run auto qiime2 bash script, outputs data in appropriate form to work with for plotting"""
-    subprocess.run(['bash','-c','bash auto_dada2_finish_betatesting.sh '+trimlength])
+    subprocess.run(['bash','-c','bash auto_dada2_finish.sh '+trimlength])
     return
 
-"""takes inputs of directory of .fastq files, trim length, and sampling depth for running the auto qiime script and creating quality plots"""
-directory = input('Directory of .fastq.gz files (note: sequence data must be gzipped):')
+# prompt user to input directory path
+directory = input('Please nter the name of your directory of .fastq.gz files (note: sequence data must be gzipped):')
+# adding error statements
+if (' ' in directory):
+    raise TypeError('Cannot have spaces in directory name')
+elif ('.' in directory):
+    raise TypeError('Please avoid periods in directory name to avoid confusion')
 
-auto_demux(directory)
+# calling importing functions based on user input
+if demux_status == 'n':
+    auto_demux(directory)
+elif demux_status == 'y':
+    import_demuxed_data(directory)
 
+# calling find_dropoff function to print information about sequence quality by position
+# so that the user can choose their trimlength logically
 make_plots.find_dropoff('data/exported_demux/', 500)
 
+# prompting user to input trim length
 trimlength = input('Please choose a sequencing trim length:')
+# adding error statements
 if trimlength.isdigit():
     pass
 else:
     raise TypeError('trim length input must be a positive integer')
-'''
-samp_depth = input("sampling depth:")
-if samp_depth.isdigit():
-    samp_depth = int(samp_depth)
-else:
-    raise TypeError('sampling depth must be a positive integer')
-'''   
-basename = input('Please input your filename:')
 
+# prompting user to name their .pkl file
+basename = input('Please input your filename:')
+# adding error statements
 if (' ' in basename):
     raise TypeError('Cannot have spaces in filename')
 elif ('.' in basename):
     raise TypeError('Please avoid periods in filename to avoid file type confusion')
     
-"""runs auto_qiime function"""
+# runs the remainder of the bash code (needs to be broken up to include feature count info for user
 auto_dada2(trimlength)
-#auto_qiime(directory,trimlength)
 
+
+# everything below is for creating the plotting objects
 """read in newly created taxonomy data file to pandas"""
 taxonomy = pd.read_csv("data/taxonomy.tsv", sep='\t')
 taxonomy[['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species']] = taxonomy['Taxon'].str.split(';', expand=True)
