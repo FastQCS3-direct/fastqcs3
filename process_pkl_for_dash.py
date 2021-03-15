@@ -37,23 +37,23 @@ print('WELCOME TO FASTQCS3! Before you begin:\n',
 # def import_demuxed_data(directory):
 #       """function to run importing of pre-demultiplexed reads"""
 #     # make a bash file called auto_import.sh that imports demultiplexed reads
-#     subprocess.run(['bash','-c','bash auto_import_betatesting.sh '+directory])
+#     subprocess.run(['bash','-c','bash shell_scripts/auto_import_betatesting.sh '+directory])
 #     return
 
 
 def auto_demux(directory):
     """function to run importing and demultiplexing (demux) of multiplexed reads"""
-    subprocess.run(['bash','-c','bash auto_demux.sh '+directory])
+    subprocess.run(['bash','-c','bash shell_scripts/auto_demux.sh '+directory])
     return
 
 def auto_dada2(trimlength):
     """function to run dada2"""
-    subprocess.run(['bash','-c','bash auto_dada2.sh '+trimlength])
+    subprocess.run(['bash','-c','bash shell_scripts/auto_dada2.sh '+trimlength])
     return
 
 def auto_classify_phylo(sample_n_features):
     """function for classification, phylogenetic analysis, outputs data in appropriate form to work with for plotting"""
-    subprocess.run(['bash','-c','bash auto_classify_phylo.sh '+sample_n_features])
+    subprocess.run(['bash','-c','bash shell_scripts/auto_classify_phylo.sh '+sample_n_features])
     return
 
 # prompt user to input directory path
@@ -87,8 +87,7 @@ if trimlength.isdigit():
 else:
     raise TypeError('trim length input must be a positive integer')
     
-# runs the remainder of the bash code (needs to be broken up to include feature count info for user
-# this second block will run dada2
+# this second block will run dada2 and the following few commands
 auto_dada2(trimlength)
 
 # calling get_feature_info to get some information on feature counts
@@ -103,6 +102,12 @@ if sample_n_features.isdigit():
 else:
     raise TypeError('sampling depth input must be a positive integer')
     
+# calling auto_classify_phylo to run remainder of commands
+auto_classify_phylo(sample_n_features)
+
+print('\n',
+      'QIIME2 has finished processing your data! Congrats!')
+    
 # prompting user to name their .pkl file
 basename = input('\nPlease give your visualization file a name:')
 # adding error statements
@@ -110,9 +115,6 @@ if (' ' in basename):
     raise TypeError('Cannot have spaces in filename')
 elif ('.' in basename):
     raise TypeError('Please avoid periods in filename to avoid file type confusion')
-
-# calling auto_classify_phylo to run remainder of commands
-auto_classify_phylo(sample_n_features)
 
 # everything below is for creating the plotting objects
 """read in newly created taxonomy data file to pandas"""
