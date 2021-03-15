@@ -23,22 +23,17 @@ print('WELCOME TO fastQCS3! Before you begin:\n',
       '3. Make sure your metadata file is in your current working directory and,\n',
       '4. Make sure your metadata file is named "sample-metadata.tsv".\n')
 
-# for Nick (from Evan lol sorry I went ahead and did some of this):
-# this is where we should make another function that runs the appropriate dada2 commands
-# depending on if the sequence files are demultiplexed or not
-# something like:
 
-# demux_status = input('Are your fastq.gz sequence file(s) demultiplexed? (y/n):')
-# if demux_status == 'y' or 'n': # this might need to be string formatted
-#     pass
-# else:
-#     raise NameError('Please enter either y or n')
+demux_status = input('Are your fastq.gz sequence file(s) demultiplexed? (y/n):')
+if demux_status == 'y' or 'n':
+    pass
+else:
+    raise NameError('Please enter either y or n')
 
-# def import_demuxed_data(directory):
-#       """function to run importing of pre-demultiplexed reads"""
-#     # make a bash file called auto_import.sh that imports demultiplexed reads
-#     subprocess.run(['bash','-c','bash shell_scripts/auto_import.sh '+directory])
-#     return
+def import_demuxed_data(directory):
+    """function to run importing of pre-demultiplexed reads"""
+    subprocess.run(['bash','-c','bash shell_scripts/auto_import.sh '+directory])
+    return
 
 def auto_demux(directory):
     """function to run importing and demultiplexing (demux) of multiplexed reads"""
@@ -63,16 +58,11 @@ if (' ' in directory):
 elif ('.' in directory):
     raise TypeError('Please avoid periods in directory name to avoid confusion')
     
-
-# this needs to be implemented somehow:
-
 # calling importing functions based on user input
-# if demux_status == 'n':
-#     auto_demux(directory)
-# elif demux_status == 'y':
-#     import_demuxed_data(directory)
-
-auto_demux(directory)
+if demux_status == 'n':
+    auto_demux(directory)
+elif demux_status == 'y':
+    import_demuxed_data(directory)
 
 # calling find_dropoff function to print information about sequence quality by position
 # so that the user can choose their trimlength logically
