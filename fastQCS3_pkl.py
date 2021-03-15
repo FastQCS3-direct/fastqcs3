@@ -148,5 +148,5 @@ with open(filename, 'wb') as f:
 print('\n',
       'Now please run the following command to visualize your data in dash!\n',
       '\n',
-      'python integrated_dashboard.py',
+      'python fastQCS3_dashboard.py',
       '\n')
