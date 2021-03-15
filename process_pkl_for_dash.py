@@ -153,5 +153,8 @@ filename = basename + '.pkl'
 with open(filename, 'wb') as f:
     pickle.dump([king_plot, phy_plot, class_plot, ord_plot, fam_plot, gen_plot, spec_plot, qual_plot, qual_hist], f)
     
-print('Now please run the following command to visualize your data in dash!\n',
-      'python integrated_dashboard.py')
+print('\n',
+      'Now please run the following command to visualize your data in dash!\n',
+      '\n',
+      'python integrated_dashboard.py',
+      '\n')
