@@ -89,7 +89,7 @@ If you have already activated your environment, go to step 2.
 
 10. The visualization objects are then packaged into a `.pkl` file. Follow the prompt and run `python fastQCS3_dashboard.py`.
 
-11. Enter the name of the visualization file you just created in step 8. The script will generate the dashboard app and display a link that can then be copied into your browser to visualize your data.
+11. Enter the name of the visualization file you just created in step 9. The script will generate the dashboard app and display a link that can then be copied into your browser to visualize your data.
 
 A demo video can be found [here](link to Ben's video?). We have provided two sets of demo data in `demo_data_v1`(from the QIIME2 "Moving Pictures" tutorial) and `demo_data_v2`(Evan's personal sequencing results that inspired this project) if you wish to practice.
 
