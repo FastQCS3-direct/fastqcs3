@@ -17,7 +17,7 @@ mv outputs/table-dada2.qza outputs/table.qza
 qiime feature-table summarize \
   --i-table outputs/table.qza \
   --o-visualization outputs/table.qzv \
-  --m-sample-metadata-file sample-metadata.tsv
+  --m-sample-metadata-file metadata/$2
   
 qiime tools export \
   --input-path outputs/table.qzv \

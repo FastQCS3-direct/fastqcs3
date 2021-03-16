@@ -18,7 +18,7 @@ qiime diversity core-metrics-phylogenetic \
   --i-phylogeny outputs/rooted-tree.qza \
   --i-table outputs/table.qza \
   --p-sampling-depth $1 \
-  --m-metadata-file sample-metadata.tsv \
+  --m-metadata-file metadata/$2 \
   --output-dir outputs/core-metrics-results
 
 unzip -q outputs/taxonomy.qza -d newpath

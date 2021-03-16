@@ -8,7 +8,7 @@ qiime tools import \
 
 qiime demux emp-single \
   --i-seqs outputs/emp-single-end-sequences.qza \
-  --m-barcodes-file sample-metadata.tsv \
+  --m-barcodes-file metadata/$2 \
   --m-barcodes-column barcode-sequence \
   --o-per-sample-sequences outputs/demux.qza \
   --o-error-correction-details outputs/demux-details.qza
