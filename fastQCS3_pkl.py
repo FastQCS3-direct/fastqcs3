@@ -59,7 +59,7 @@ elif ('.' in directory):
     raise TypeError('Please avoid periods in directory name to avoid confusion')
     
 # prompting user to add their metadata file
-metadata = input('Please enter your metadata file name (file must exist in metadata directory):')
+metadata = input('Please enter your complete (ie. filename.tsv) metadata file name (file must exist in metadata directory):')
 # adding error statements
 if (' ' in metadata):
     raise TypeError('Cannot have spaces in filename')
