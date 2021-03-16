@@ -14,6 +14,7 @@ You can follow the instructions [here](https://conda.io/projects/conda/en/latest
 
 #### Updating Miniconda and Installing Zip/Unzip
 `conda update conda`
+
 `sudo apt-get install zip unzip`
 
 #### Creating the FastQCS3 Environment from this Repo
