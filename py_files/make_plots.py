@@ -1,19 +1,17 @@
+"""Import libraries"""
+import os
+import gzip
+
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
 import scipy.stats as st
-
-import os
-
 # Bio needs to be installed by the user,
 # can be done with conda install biopython
 from Bio import SeqIO
 
-# gzip needs to also be installed by the user,
-# can be done with conda install gzip
-import gzip
-
 def quality_hist():
+    """function for quality histogram plotting"""
     directory = 'data/exported_demux/'
     filename = 'per-sample-fastq-counts.tsv'
     reads_per = pd.read_csv(directory+filename, sep='\t')
@@ -56,7 +54,6 @@ def get_scores(filename, depth):
         sample_scores = pd.DataFrame(result)
         return sample_scores
 
-
 def sum_scores(directory, depth):
     """Middle layer function that iterated through a directory
     given as a parameter. Calls the get_scores function on
@@ -68,7 +65,6 @@ def sum_scores(directory, depth):
         sum_df = sum_df.append(sample_scores, ignore_index=True)
     read_pos = sum_df.columns.to_list()
     return read_pos, sum_df
-
 
 def find_dropoff(directory, depth):
     """This function find the position in the reads at which the average phred
@@ -83,21 +79,19 @@ def find_dropoff(directory, depth):
     pos3 = next((position for position,
                  score in enumerate(means) if score < 20), None)
     pos4 = next((position for position,
-                 score in enumerate(means) if score < 15), None) 
+                 score in enumerate(means) if score < 15), None)
     print('\n',
-          'Here is some information about the quality of your reads to help you choose a trim length\n',
+          'Here is some information about your read quality to help you choose a trim length\n',
           '\n',
-          'the average quality of your reads drops below a phred score of 30 at position', pos1, '\n',
-          'the average quality of your reads drops below a phred score of 25 at position', pos2, '\n',
-          'the average quality of your reads drops below a phred score of 20 at position', pos3, '\n',
-          'the average quality of your reads drops below a phred score of 15 at position', pos4, '\n')
+          'your average read quality drops below a phred score of 30 at position', pos1, '\n',
+          'your average read quality drops below a phred score of 25 at position', pos2, '\n',
+          'your average read quality drops below a phred score of 20 at position', pos3, '\n',
+          'your average read quality drops below a phred score of 15 at position', pos4, '\n')
     if pos1 == None:
-        print('\nYour sequence quality scores are awesome throughout the whole length of your reads!', '\n',
+        print('\nYour sequence quality is awesome for the entire length of your reads!', '\n',
               'Enter 0 for trim length to retain the entire length of your reads.')
     else:
         pass
-    return
-
 
 def plot_qualities(directory, depth):
     """This function takes a directory and a sampling depth as parameters
@@ -118,10 +112,10 @@ def plot_qualities(directory, depth):
                                  scale=st.tstd(base_scores.values))
         # appending the lower CI intervals
         ci95_lo.append(interval[0])
-    CI_below = []
+    ci_below = []
     for num1, num2 in zip(ci95_lo, means):
-        CI_below.append(np.abs(num1 - num2))
-    CI_below = [x * 1.5 for x in CI_below]
+        ci_below.append(np.abs(num1 - num2))
+    ci_below = [x * 1.5 for x in ci_below]
     max_quality = []
     for column in sum_df:
         scores = sum_df[column]
@@ -132,7 +126,7 @@ def plot_qualities(directory, depth):
         color='black',
         thickness=1,
         array=max_quality-means,
-        arrayminus=CI_below)
+        arrayminus=ci_below)
     # create figure object
     fig = go.Figure()
     # adding low quality score patch
@@ -166,7 +160,6 @@ def plot_qualities(directory, depth):
     fig.update_yaxes(title_text='phred quality score')
     return fig
 
-
 def plotly_stacked_barplot(df, plot_title):
     """Given a dataframe and a plot title, returns a plotly
     stacked barplot figure of the taxonomy data"""
@@ -181,7 +174,6 @@ def plotly_stacked_barplot(df, plot_title):
     fig.update_yaxes(title_text='Relative Frequency')
     return fig
 
-
 def get_feature_info(filepath):
     """Given a feature table, will print stats on feature counts"""
     colnames = ['sample-id', 'num_features']
@@ -190,13 +182,13 @@ def get_feature_info(filepath):
     max_feats = np.max(features['num_features'].values).astype(int)
     mean_feats = np.mean(features['num_features'].values).astype(int)
     stdev_feats = np.std(features['num_features'].values).astype(int)
-    
+
     suggest = 0
     if min_feats <= 100:
         suggest = mean_feats - stdev_feats
     elif min_feats > 100:
         suggest = min_feats - 1
-    
+
     print('\n',
           'Here is some information about the number of features in your samples:\n',
           '\n',
@@ -206,4 +198,3 @@ def get_feature_info(filepath):
           'Standard deviation of feature counts across samples:', stdev_feats, '\n',
           '\n',
           'We would suggest using a sampling depth of or below:', suggest)
-    return
