@@ -24,6 +24,8 @@ Due to the size of the QIIME2 package, creating the environment can take awhile.
 
 You can deactivate at any time using `conda deactivate`.
 
+If you have followed the instructions up to this point and you have created your environment from the `environment.yml` file, move straight to the **Operating Instructions** section.
+
 ### Creating an Environment from Scratch
 To create an environment from scratch, you'll have to download QIIME2 using the following instructions and install Biopython and Dash as well.
 
@@ -65,27 +67,29 @@ You will also need to add your metadata file to the `metadata/` directory (see d
 
 ### To begin running the software:
 
-If you have activated your environment, go to step 2.
+If you have already activated your environment, go to step 2.
 
-1. Run `python fastQCS3_pkl.py`. This will begin the automated QIIME2 process of importing your data and performing the analysis. 
+1. Activate your fastQCS3 environment by typing the command `conda activate fastqcs3`.
 
-2. You will be asked if your reads are multiplexed or demultiplexed. Choose `y` or `n`.
+2. Run `python fastQCS3_pkl.py`. This will begin the automated QIIME2 process of importing your data and performing the analysis. 
 
-3. You will then be prompted to enter the name of the directory containing your sequence data. For example, you would enter `demo_data_v1` to import the demo data from that directory.
+3. You will be asked if your reads are multiplexed or demultiplexed. Choose `y` or `n`.
 
-4. Enter the name of your metadata file. The response should be in the format of `sample-metadata.tsv`. Your data will then begin importing into objects the QIIME2 software can handle.
+4. You will then be prompted to enter the name of the directory containing your sequence data. For example, you would enter `demo_data_v1` to import the demo data from that directory.
 
-5. You will then be given information about the quality of your reads, and the positions at which their quality begins to drop off below a certain threshold. Use this information to advise your choice for a squencing trim length. We recommend setting trim length to an integer (ie. `120`) where your average quality drops below a phred score of ~18-22. If all positions are `None`, then set trim length to `0` to trim off nothing and retain the entire length of your reads.
+5. Enter the name of your metadata file. The response should be in the format of `sample-metadata.tsv`. Your data will then begin importing into objects the QIIME2 software can handle.
 
-6. After choosing a trim length, [DADA2](https://pubmed.ncbi.nlm.nih.gov/27214047/) will run. DADA2 will generate a feature table, where each feature corresponds to an [ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant). If you have tens of millions of reads, DADA2 can take several hours to run. If you have hundreds of thousands, DADA2 will finish in a matter of minutes.
+6. You will then be given information about the quality of your reads, and the positions at which their quality begins to drop off below a certain threshold. Use this information to advise your choice for a squencing trim length. We recommend setting trim length to an integer (ie. `120`) where your average quality drops below a phred score of ~18-22. If all positions are `None`, then set trim length to `0` to trim off nothing and retain the entire length of your reads.
 
-7. You will then be presented with information about the abundance of features in your dataset. If some samples perform poorly and have few features (0 to ~30), you'll want to exclude them from further analysis. Depending on the distribution of your samples, the software will suggest a unique sampling depth integer value. Either take the suggestion, or read more about [choosing a sampling depth](https://docs.qiime2.org/2020.11/tutorials/moving-pictures/#alpha-and-beta-diversity-analysis). Sampling depth must be an integer (ie. `800`).
+7. After choosing a trim length, [DADA2](https://pubmed.ncbi.nlm.nih.gov/27214047/) will run. DADA2 will generate a feature table, where each feature corresponds to an [ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant). If you have tens of millions of reads, DADA2 can take several hours to run. If you have hundreds of thousands, DADA2 will finish in a matter of minutes.
 
-8. The pipeline will then compute alpha and beta diversity metrics, generate a phylogenetic tree, perform alpha rarefaction, and taxonomic analysis all in one step. If completed successfully, you will be prompted to enter a name for your visualization file you will use in step 10. Do not include spaces or periods in your file name.
+8. You will then be presented with information about the abundance of features in your dataset. If some samples perform poorly and have few features (0 to ~30), you'll want to exclude them from further analysis. Depending on the distribution of your samples, the software will suggest a unique sampling depth integer value. Either take the suggestion, or read more about [choosing a sampling depth](https://docs.qiime2.org/2020.11/tutorials/moving-pictures/#alpha-and-beta-diversity-analysis). Sampling depth must be an integer (ie. `800`).
 
-9. The visualization objects are then packaged into a `.pkl` file. Follow the prompt and run `python fastQCS3_dashboard.py`.
+9. The pipeline will then compute alpha and beta diversity metrics, generate a phylogenetic tree, perform alpha rarefaction, and taxonomic analysis all in one step. If completed successfully, you will be prompted to enter a name for your visualization file you will use in step 11. Do not include spaces or periods in your file name.
 
-10. Enter the name of the visualization file you just created in step 8. The script will generate the dashboard app and displa a link that can then be copied into your browser to visualize your data.
+10. The visualization objects are then packaged into a `.pkl` file. Follow the prompt and run `python fastQCS3_dashboard.py`.
+
+11. Enter the name of the visualization file you just created in step 8. The script will generate the dashboard app and display a link that can then be copied into your browser to visualize your data.
 
 A demo video can be found [here](link to Ben's video?). We have provided two sets of demo data in `demo_data_v1`(from the QIIME2 "Moving Pictures" tutorial) and `demo_data_v2`(Evan's personal sequencing results that inspired this project) if you wish to practice.
 
