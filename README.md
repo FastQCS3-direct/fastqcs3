@@ -12,15 +12,16 @@ FastQCS3 seeks to utilize QIIME2 data processing capabilities while focusing on 
 #### Installing Miniconda
 You can follow the instructions [here](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) to install Miniconda. 
 
-#### Updating Miniconda
+#### Updating Miniconda and Installing Zip/Unzip
 `conda update conda`
+`sudo apt-get install zip unzip`
 
 #### Creating the FastQCS3 Environment from this Repo
 Once you have Miniconda, you can create an environment using the provided environment.yml file contained in this repo and the following command. 
 
 `conda env create -n fastqcs3 --file environment.yml`
 
-Due to the size of the QIIME2 package, creating the environment can take awhile. Once it has finished, activate your environment through `conda activate fastqcs3`
+Due to the size of the QIIME2 package, creating the environment can take awhile. Once it has finished, activate your environment through `conda activate fastqcs3`.
 
 You can deactivate at any time using `conda deactivate`.
 
