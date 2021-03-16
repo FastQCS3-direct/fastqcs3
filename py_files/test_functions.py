@@ -193,13 +193,13 @@ def test_get_feature_info():
 
 def test_bray_beta_diversity_clean_1():
     """test function to check output is of type pandas dataframe"""
-    bray_metadata_to_plot=bray_beta_diversity_clean('data')
+    bray_metadata_to_plot=bray_beta_diversity_clean('../data')
     assert isinstance(bray_metadata_to_plot,pd.core.frame.DataFrame),"not returning df"
 
 def test_bray_beta_diversity_clean_2():
     """test function to check that Unnamed: 0 column has been removed from final DF"""
     try:
-        bray_metadata_to_plot=bray_beta_diversity_clean('data')
+        bray_metadata_to_plot=bray_beta_diversity_clean('../data')
         bray_metadata_to_plot['Unnamed: 0']
     except Exception as e:
         assert isinstance(e, 'KeyError'), "unnamed column still present"
@@ -207,7 +207,7 @@ def test_bray_beta_diversity_clean_2():
         
 def test_bray_beta_diversity_clean_3():
     """test function to check that metadata and PC results were merged/both present in output"""
-    bray_metadata_to_plot=bray_beta_diversity_clean('data')
+    bray_metadata_to_plot=bray_beta_diversity_clean('../data')
     if 'body-site' and 'PC1' in bray_metadata_to_plot.columns:
         result = 1
     else:
@@ -217,13 +217,13 @@ def test_bray_beta_diversity_clean_3():
 
 def test_unifrac_beta_diversity_clean_1():
     """test function to check output is of type pandas dataframe"""
-    unifrac_metadata_to_plot=unifrac_beta_diversity_clean('data')
+    unifrac_metadata_to_plot=unifrac_beta_diversity_clean('../data')
     assert isinstance(unifrac_metadata_to_plot,pd.core.frame.DataFrame),"not returning df"
 
 def test_unifrac_beta_diversity_clean_2():
     """test function to check that Unnamed: 0 column has been removed from final DF"""
     try:
-        unifrac_metadata_to_plot=unifrac_beta_diversity_clean('data')
+        unifrac_metadata_to_plot=unifrac_beta_diversity_clean('../data')
         unifrac_metadata_to_plot['Unnamed: 0']
     except Exception as e:
         assert isinstance(e, 'KeyError'), "unnamed column still present"
@@ -231,7 +231,7 @@ def test_unifrac_beta_diversity_clean_2():
         
 def test_unifrac_beta_diversity_clean_3():
     """test function to check that metadata and PC results were merged/both present in output"""
-    unifrac_metadata_to_plot=unifrac_beta_diversity_clean('data')
+    unifrac_metadata_to_plot=unifrac_beta_diversity_clean('../data')
     if 'body-site' and 'PC1' in unifrac_metadata_to_plot.columns:
         result = 1
     else:
@@ -241,25 +241,25 @@ def test_unifrac_beta_diversity_clean_3():
     
 def test_unifrac_beta_diversity_clean_4():
     """test function to check that the metadata is the same between both beta diversity functions"""
-    bray_metadata_to_plot=bray_beta_diversity_clean('data')
-    unifrac_metadata_to_plot=unifrac_beta_diversity_clean('data')
+    bray_metadata_to_plot=bray_beta_diversity_clean('../data')
+    unifrac_metadata_to_plot=unifrac_beta_diversity_clean('../data')
     assert unifrac_metadata_to_plot['body-site'].all() == bray_metadata_to_plot['body-site'].all()
     
 def test_unifrac_beta_diversity_clean_5():
     """test function to check that beta diversity metric PCOA analyses are not identical"""
-    bray_metadata_to_plot=bray_beta_diversity_clean('data')
-    unifrac_metadata_to_plot=unifrac_beta_diversity_clean('data')
+    bray_metadata_to_plot=bray_beta_diversity_clean('../data')
+    unifrac_metadata_to_plot=unifrac_beta_diversity_clean('../data')
     false = bray_metadata_to_plot.iloc[1,9] == unifrac_metadata_to_plot.iloc[1,9]
     assert false == False, "bray curtis equals weighted unifrac"
 
 def test_alpha_diversity_plot_1():
     """test function to check that output is expected type pd dataframe"""
-    alpha_metadata_to_plot=alpha_diversity_plot('data')
+    alpha_metadata_to_plot=alpha_diversity_plot('../data')
     assert isinstance(alpha_metadata_to_plot,pd.core.frame.DataFrame),"not returning df"
 
 def test_alpha_diversity_plot_2():
     """test function to check if dataframe has merged metadata and alpha metrics"""
-    alpha_metadata_to_plot=alpha_diversity_plot('data')
+    alpha_metadata_to_plot=alpha_diversity_plot('../data')
     if 'sample-id' and 'shannon_entropy' and 'faith_diversity' and 'pielou_evenness' in alpha_metadata_to_plot.columns:
         result = 1
     else:
@@ -268,6 +268,6 @@ def test_alpha_diversity_plot_2():
     
 def test_alpha_diversity_plot_3():
     """test function to check that alpha diversity metrics are values and not NaN"""
-    alpha_metadata_to_plot=alpha_diversity_plot('data')
+    alpha_metadata_to_plot=alpha_diversity_plot('../data')
     result = alpha_metadata_to_plot.iloc[1,10]
     assert isinstance(result,np.float64), "values not populating for alpha metrics"
