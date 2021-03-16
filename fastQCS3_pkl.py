@@ -20,8 +20,8 @@ print('WELCOME TO fastQCS3! Before you begin:\n',
       '1. Please make sure your .fastq.gz files are in a directory.\n',
       '2. If your sequences are still multiplexed:',
       'make sure your barcodes.fastq.gz file lives in the same directory as your sequences.\n',
-      '3. Make sure your metadata file is in your current working directory and,\n',
-      '4. Make sure your metadata file is named "sample-metadata.tsv".\n')
+      '3. Make sure your metadata file is in the metadata directory and,\n',
+      '4. Make sure you know your metadata file name.\n')
 
 
 demux_status = input('Are your fastq.gz sequence file(s) demultiplexed? (y/n):')
@@ -35,19 +35,19 @@ def import_demuxed_data(directory):
     subprocess.run(['bash','-c','bash shell_scripts/auto_import.sh '+directory])
     return
 
-def auto_demux(directory):
+def auto_demux(directory, metadata):
     """function to run importing and demultiplexing (demux) of multiplexed reads"""
-    subprocess.run(['bash','-c','bash shell_scripts/auto_demux.sh '+directory])
+    subprocess.run(['bash','-c','bash shell_scripts/auto_demux.sh '+directory+' '+metadata])
     return
 
-def auto_dada2(trimlength):
+def auto_dada2(trimlength, metadata):
     """function to run dada2"""
-    subprocess.run(['bash','-c','bash shell_scripts/auto_dada2.sh '+trimlength])
+    subprocess.run(['bash','-c','bash shell_scripts/auto_dada2.sh '+trimlength+' '+metadata])
     return
 
-def auto_classify_phylo(sample_n_features):
+def auto_classify_phylo(sample_n_features, metadata):
     """function for classification, phylogenetic analysis, outputs data in appropriate form to work with for plotting"""
-    subprocess.run(['bash','-c','bash shell_scripts/auto_classify_phylo.sh '+sample_n_features])
+    subprocess.run(['bash','-c','bash shell_scripts/auto_classify_phylo.sh '+sample_n_features+' '+metadata])
     return
 
 # prompt user to input directory path
@@ -58,9 +58,15 @@ if (' ' in directory):
 elif ('.' in directory):
     raise TypeError('Please avoid periods in directory name to avoid confusion')
     
+# prompting user to add their metadata file
+metadata = input('Please enter your metadata file name (file must exist in metadata directory):')
+# adding error statements
+if (' ' in metadata):
+    raise TypeError('Cannot have spaces in filename')
+    
 # calling importing functions based on user input
 if demux_status == 'n':
-    auto_demux(directory)
+    auto_demux(directory, metadata)
 elif demux_status == 'y':
     import_demuxed_data(directory)
 
@@ -78,7 +84,7 @@ else:
     
 # this second block will run dada2 and the following few commands
 print('\n...running dada2...this may take a few minutes...')
-auto_dada2(trimlength)
+auto_dada2(trimlength, metadata)
 
 # calling get_feature_info to get some information on feature counts
 # to let the user choose sampling depth
@@ -92,8 +98,10 @@ if sample_n_features.isdigit():
 else:
     raise TypeError('sampling depth input must be a positive integer')
     
+    
+print('\n...building phylogenetic tree and classifying ASVs...this may take a few minutes...')    
 # calling auto_classify_phylo to run remainder of commands
-auto_classify_phylo(sample_n_features)
+auto_classify_phylo(sample_n_features, metadata)
 
 print('\n',
       'fastQCS3 has finished processing your data! Congrats!')
@@ -105,6 +113,8 @@ if (' ' in basename):
     raise TypeError('Cannot have spaces in filename')
 elif ('.' in basename):
     raise TypeError('Please avoid periods in filename to avoid file type confusion')
+    
+print('\n...packaging your visualizations...this may take a minute...')    
 
 # everything below is for creating the plotting objects
 """read in newly created taxonomy data file to pandas"""
