@@ -1,28 +1,21 @@
+Target User:
+Microbiome researchers in academia interested in quick visualization of sequencing results (i.e. Evan)
+
+__________________________________________________________________________
 **Use Case 1:** <br />
-Validation of input data type 
+Module 1: Auto-QIIME and Result Output
 
-User: Inputs sequencing data
+User: Call py file to analyze specified directory of data
 
-Function: Parses data, determines if in correct .fastq format
+Function: Reads .fastq files, assesses for quality, performs taxonomic classification, calculates diversity metrics
 
-Results: No errors/errors
+Results: Pkl file of sequencing quality, relative taxonomic abundances, alpha/beta diversity metrics 
 __________________________________________________________________________
 **Use Case 2:** <br />
-Module 1: Information on sequencing quality
+Module 2: Visualization of Results and Dash Output
 
-User: Call function to examine quality of sequencing data
-
-Function: Reads .fastq files, assesses for quality and app callback to Dash
-
-Results: Plots of summary statistics, sequencing counts etc. 
-__________________________________________________________________________
-**Use Case 3:** <br />
-Module 2: Visualization of sequencing results
-
-User: Call function to examine results of sequence mapping
+User: Call py file to visualize pkl file in Dash
  
-Function: Maps sequences to database (NCBI) using dependent packages (FastQC, Qiime?)
+Function: Returns link to be pasted into browser
 
-Results: Plots of species abundance, diversity, proportion of mapped reads, clustering analysis (Scikit Bio) 
-
-
+Results: Interactive dashboard visualization 

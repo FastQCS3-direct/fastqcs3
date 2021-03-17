@@ -95,16 +95,31 @@ If you have already activated your environment, go to step 2.
 
 A demo video can be found [here](https://drive.google.com/file/d/1eOvU6tZbP_RjeCNKpjHgz_dMSecAPgQH/view?usp=sharing). We have provided two sets of demo data in `demo_data_v1`(from the QIIME2 "Moving Pictures" tutorial) and `demo_data_v2`(Evan's personal sequencing results that inspired this project) if you wish to practice.
 
-
-#### Important Notes about Usage
+#### Important Notes about Usage and Future Steps
 	1. Your fastq files should be labelled with an alphabetical character in front:
 		i.e. `A1_S1_L001_R1_001.fastq.gz` instead of `1_S1_LOO1_R1_001.fastq.gz`
 		
-	2. If running multiple datasets at once, you will have to change the host name on line 204 of
-	the `fastQCS3_dashboard.py` file every time you run a new dataset to visualize all at the same time.
+	2. If running multiple datasets at once, you will have to change the host name and the port name 
+	on line 204 of the `fastQCS3_dashboard.py` file every time 
+	you run a new dataset to visualize all at the same time.
 		i.e. `app.run_server(host='127.0.0.1', port='8050', debug=False)` followed by
 		`app.run_server(host='128.0.0.1', port='8050', debug=False)`
+	We hope to modify this in the future to allow users to run multiple directories at once.
+	
+	3. Unit testing in dash can be complicated, so most of our unit tests are designed to focus on the 
+	accurate generation of dataframes to then be plotted later in Dash. The main testing functions can
+	be found in the `py_files` directory and they perform tests on our data manipulation scripts within 
+	that directory. Running nosetests on that directory after running the pkl.py script on the demo_data_v1
+	directory indicates passing results.
 
+	4. The classifier we use in this repo was not trained by us; it's a commonly used microbiome classifier
+	that we borred from the QIIME2 tutorials. In the future, we'd like to develop our own pipeline to train
+	a user-specific classifier.
+
+	5. Future next steps could also include: making the package pip installable, expanding to include paired 
+	end sequencing, adding additional output plots including an option to display data before dada2 filtering,
+	and eventually developing our own functions for data processing to remove QIIME2 dependence.
+		
 #### Notes about CI
 	CI can be difficult when running in such a large and complicated environment (like one containing QIIME2).
 	Check back for updates about continuous integration through Travis CI.
